@@ -40,7 +40,8 @@ defmodule Fuentes.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ecto, "~> 2.0.0-rc.3"}
+      {:ecto, git: "https://github.com/elixir-lang/ecto", tag: "v2.0.0-rc.3"},
+      {:postgrex, ">= 0.0.0"}
     ]
   end
 
@@ -53,7 +54,7 @@ defmodule Fuentes.Mixfile do
   defp package do
     [maintainers: ["David Kuhta"],
      licenses: ["Apache 2.0"],
-     links: %{"GitHub" => "https://github.com/davidkuhta/fuents"},
+     links: %{"GitHub" => "https://github.com/davidkuhta/fuentes"},
      files: ~w(mix.exs README.md CHANGELOG.md lib) ++
             ~w(integration_test/cases integration_test/sql integration_test/support)]
   end
