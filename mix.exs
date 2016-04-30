@@ -39,7 +39,9 @@ defmodule Fuentes.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      {:ecto, "~> 2.0.0-rc.3"}
+    ]
   end
 
   defp description do
