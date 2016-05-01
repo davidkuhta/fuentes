@@ -41,7 +41,7 @@ defmodule Fuentes.Mixfile do
   defp deps do
     [
       {:ecto, git: "https://github.com/elixir-lang/ecto", tag: "v2.0.0-rc.3"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0", only: :test}
     ]
   end
 
@@ -52,10 +52,12 @@ defmodule Fuentes.Mixfile do
   end
 
   defp package do
-    [maintainers: ["David Kuhta"],
-     licenses: ["Apache 2.0"],
-     links: %{"GitHub" => "https://github.com/davidkuhta/fuentes"},
-     files: ~w(mix.exs README.md CHANGELOG.md lib) ++
-            ~w(integration_test/cases integration_test/sql integration_test/support)]
+    [
+      maintainers: ["David Kuhta"],
+      licenses: ["Apache 2.0"],
+      links: %{"GitHub" => "https://github.com/davidkuhta/fuentes"},
+      files: ~w(mix.exs README.md CHANGELOG.md lib) ++
+            ~w(integration_test/cases integration_test/sql integration_test/support)
+    ]
   end
 end
