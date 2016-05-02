@@ -26,7 +26,7 @@ defmodule Fuentes.Amount do
 
   @fields ~w(type amount)
 
-  @amount_types ["Single Family", "Two-Family", "Three-Family", "Four-Family", "Condo"]
+  @amount_types ["Debit", "Credit"]
 
   @doc """
   Creates a changeset based on the `model` and `params`.
