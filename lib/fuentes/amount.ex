@@ -1,5 +1,18 @@
 # lib/fuentes/account.ex
 defmodule Fuentes.Amount do
+  @moduledoc false
+
+  @doc ~S"""
+  The Amount class represents debit and credit amounts in the system.
+
+  An amount must be a subclassed as either a debit or a credit to be saved to the database.
+
+  """
+
+  use Ecto.Schema
+  import Ecto
+  import Ecto.Changeset
+  import Ecto.Query, only: [from: 1, from: 2]
 
   schema "amounts" do
     field :type, :string
@@ -13,6 +26,8 @@ defmodule Fuentes.Amount do
 
   @fields ~w(type amount)
 
+  @amount_types ["Single Family", "Two-Family", "Three-Family", "Four-Family", "Condo"]
+
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -24,7 +39,8 @@ defmodule Fuentes.Amount do
     model
     |> cast(params, @fields)
     |> validate_required([:description, :date])
-    |> validate_number(:amount, greater_than_or_equal_to: 0)
     |> Ecto.Changeset.assoc_constraint([:entry, :account])
+    |> validate_inclusion(:type, @amount_types)
+    |> validate_number(:amount, greater_than_or_equal_to: 0)
   end
 end
