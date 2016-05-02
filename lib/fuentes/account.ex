@@ -33,7 +33,7 @@ defmodule Fuentes.Account do
    @see http://en.wikipedia.org/wiki/Debits_and_credits Debits, Credits, and Contra Accounts
 
   """
-  
+
   use Ecto.Schema
   import Ecto
   import Ecto.Changeset
@@ -65,5 +65,11 @@ defmodule Fuentes.Account do
     |> cast(params, @fields)
     |> validate_required([:name, :type])
     |> validate_inclusion(:type, @account_types)
+  end
+
+  def sum(account) do
+    account
+    |> Repo.preload(:amounts)
+    amounts = account.amounts
   end
 end

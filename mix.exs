@@ -9,6 +9,7 @@ defmodule Fuentes.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps,
+     aliases: aliases,
 
      # Hex
      description: description,
@@ -26,7 +27,7 @@ defmodule Fuentes.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:postgrex, :ecto, :logger]]
   end
 
   # Dependencies can be Hex packages:
@@ -41,7 +42,7 @@ defmodule Fuentes.Mixfile do
   defp deps do
     [
       {:ecto, git: "https://github.com/elixir-lang/ecto", tag: "v2.0.0-rc.3"},
-      {:postgrex, ">= 0.0.0", only: :test}
+      {:postgrex, ">= 0.0.0"}
     ]
   end
 
@@ -58,6 +59,14 @@ defmodule Fuentes.Mixfile do
       links: %{"GitHub" => "https://github.com/davidkuhta/fuentes"},
       files: ~w(mix.exs README.md CHANGELOG.md lib) ++
             ~w(integration_test/cases integration_test/sql integration_test/support)
+    ]
+  end
+
+  defp aliases do
+    [
+      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end
