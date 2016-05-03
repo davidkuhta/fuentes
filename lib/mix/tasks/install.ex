@@ -55,15 +55,6 @@ defmodule Mix.Tasks.Fuentes.Install do
 
     instructions = """
 
-    Use Passport in your web/router.ex
-        use Passport
-
-    add the plug `:current_user` in your browser pipeline
-        pipeline :browser do
-          ...
-          plug :current_user
-        end
-
     Add the following routes to your browser scope in web/router.ex:
 
         get "/login", SessionController, :new

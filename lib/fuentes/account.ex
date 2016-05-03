@@ -44,7 +44,8 @@ defmodule Fuentes.Account do
     field :type, :string
     field :contra, :boolean, default: false
 
-    has_many :amounts, Fuentes.Amount, on_delete: :delete_all
+    has_many :debit_amounts, Fuentes.DebitAmount, on_delete: :delete_all
+    has_many :credit_amounts, Fuentes.CreditAmount, on_delete: :delete_all
 
     timestamps
   end
@@ -67,9 +68,26 @@ defmodule Fuentes.Account do
     |> validate_inclusion(:type, @account_types)
   end
 
+
+  def with_amounts(query) do
+    from q in query, preload: [:amounts]
+  end
+
   def sum(account) do
-    account
-    |> Repo.preload(:amounts)
-    amounts = account.amounts
+    from amount in Fuentes.Amount, join: account in assoc(amount, :account), select: [sum(amount.amount)]
+  end
+
+  def credit_sum(account) do
+    from amount in Fuentes.Amount,
+     join: account in assoc(amount, :account),
+     where: amount.type == "Credit",
+     select: [sum(amount.amount)]
+  end
+
+  def debit_sum(account) do
+    from amount in Fuentes.Amount,
+     join: account in assoc(amount, :account),
+     where: amount.type == "Debit",
+     select: [sum(amount.amount)]
   end
 end

@@ -9,10 +9,11 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-alias Fuentes.Repo
+
 alias Fuentes.Account
 alias Fuentes.Entry
-alias Fuentes.Amount
+alias Fuentes.CreditAmount
+alias Fuentes.DebitAmount
 
 account1_changeset = Account.changeset(%Account{}, %{
   name: "Cash",
@@ -22,12 +23,12 @@ account1_changeset = Account.changeset(%Account{}, %{
 
 account2_changeset = Account.changeset(%Account{}, %{
   name: "Loan",
-  name: "Liability"
+  type: "Liability"
   })
 
 account3_changeset = Account.changeset(%Account{}, %{
   name: "David",
-  name: "Equity"
+  type: "Equity"
   })
 
 cash = Repo.insert!(account1_changeset)
@@ -50,16 +51,34 @@ entry2 = Repo.insert! %Entry{
   date: %Ecto.Date{ year: 2016, month: 1, day: 16 }
 }
 
-amount1 = Repo.insert! %Amount{
-  type: "Credit",
+amount1 = Repo.insert! %CreditAmount{
   amount: Decimal.new(2400.00),
   account_id: 1,
   entry_id: 1
 }
 
-amount2 = Repo.insert! %Amount{
-  type: "Debit",
+amount2 = Repo.insert! %DebitAmount{
   amount: Decimal.new(2400.00),
   account_id: 2,
   entry_id: 1
+}
+
+changeset = Entry.changeset %Entry{
+  description: "Buying first Porsche",
+  date: %Ecto.Date{ year: 2016, month: 1, day: 16 },
+  debit_amounts: [ %DebitAmount{ amount: Decimal.new(300.00), account_id: 2 }  ],
+  credit_amounts: [ %CreditAmount{ amount: Decimal.new(300.00), account_id: 1 }  ]
+}
+
+IO.inspect changeset
+IO.inspect changeset.valid?
+Repo.insert!(changeset)
+
+Repo.insert! %Entry{
+  description: "Buying first G6",
+  date: %Ecto.Date{ year: 2016, month: 1, day: 16 },
+  debit_amounts:
+    [ %DebitAmount{ amount: Decimal.new(500.00), account_id: 2 } ],
+  debit_amounts:
+    [ %CreditAmount{ amount: Decimal.new(500.00), account_id: 1 } ]
 }
