@@ -1,5 +1,6 @@
 # lib/fuentes/account.ex
 defmodule Fuentes.Account do
+  alias Fuentes.Account
   @moduledoc false
 
   @doc ~S"""
@@ -43,6 +44,7 @@ defmodule Fuentes.Account do
     field :name, :string
     field :type, :string
     field :contra, :boolean, default: false
+    field :balance, :decimal, virtual: true
 
     has_many :debit_amounts, Fuentes.DebitAmount, on_delete: :delete_all
     has_many :credit_amounts, Fuentes.CreditAmount, on_delete: :delete_all
@@ -68,26 +70,44 @@ defmodule Fuentes.Account do
     |> validate_inclusion(:type, @account_types)
   end
 
+  def balance(account = %Account { type: "Asset" }) do
+    credits = Account
+      |> Account.credit_sum
+      |> Repo.get(account.id)
+
+    debits = Account
+      |> Account.debit_sum
+      |> Repo.get(account.id)
+
+    credits - debits
+  end
+
+  def balance(account) do
+      debit_sum(account) - credit_sum(account)
+  end
 
   def with_amounts(query) do
-    from q in query, preload: [:amounts]
+    from q in query, preload: [:credit_amounts, :debit_amounts]
   end
 
   def sum(account) do
-    from amount in Fuentes.Amount, join: account in assoc(amount, :account), select: [sum(amount.amount)]
+    #from amount in Fuentes.Amount, join: account in assoc(amount, :account), select: [sum(amount.amount)]
   end
 
-  def credit_sum(account) do
-    from amount in Fuentes.Amount,
-     join: account in assoc(amount, :account),
-     where: amount.type == "Credit",
+  # Account |> Account.credit_sum |> Repo.get(1) [Repo.get(Account.credit_sum(Account),1)]
+  def credit_sum(account = %Account{}) do
+    from amount in Fuentes.CreditAmount,
+     where: amount.account_id == ^account.id,
+     #join: account in assoc(amount, :account),
+     #where: amount.type == "Credit",
      select: [sum(amount.amount)]
   end
 
-  def debit_sum(account) do
-    from amount in Fuentes.Amount,
-     join: account in assoc(amount, :account),
-     where: amount.type == "Debit",
-     select: [sum(amount.amount)]
+  def debit_sum(account = %Account{}) do
+    from amount in Fuentes.DebitAmount,
+      where: amount.account_id == ^account.id,
+      #join: account in assoc(amount, :account),
+      #where: amount.type == "Debit",
+      select: [sum(amount.amount)]
   end
 end

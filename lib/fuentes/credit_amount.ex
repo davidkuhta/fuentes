@@ -39,4 +39,16 @@ defmodule Fuentes.CreditAmount do
     |> validate_required([:amount])
     |> validate_number(:amount, greater_than_or_equal_to: 0)
   end
+
+  def for_entry(query, entry) do
+    from c in query,
+     join: p in assoc(c, :entry),
+     where: p.id == ^entry.id
+  end
+
+  def for_account(query, account) do
+    from c in query,
+     join: p in assoc(c, :account),
+     where: p.id == ^account.id
+  end
 end
