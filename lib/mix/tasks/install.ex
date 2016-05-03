@@ -6,11 +6,11 @@ defmodule Mix.Tasks.Fuentes.Install do
   @moduledoc """
   Generates an Ecto model.
 
-      mix passport.install
+      mix fuentes.install
 
       or
 
-      mix passport.install Admin admins
+      mix fuentes.install Admin admins
 
   The first argument is the module name for the user and the second argument is the plural form of the module name. If omitted, it uses default module name as User and its plural form users.
 
@@ -51,7 +51,7 @@ defmodule Mix.Tasks.Fuentes.Install do
         {:eex, "password_reset.html.eex", "web/templates/password/forget_password.html.eex"},
       ]
 
-    Mix.Phoenix.copy_from paths(), "priv/templates/passport.install", "", binding, files
+    Mix.Phoenix.copy_from paths(), "priv/templates/fuentes.install", "", binding, files
 
     instructions = """
 
@@ -65,8 +65,8 @@ defmodule Mix.Tasks.Fuentes.Install do
         get "/forget-password", PasswordController, :forget_password
         post "/reset-password", PasswordController, :reset_password
 
-    Add Passport configuration in your config.exs like below:
-        config :passport,
+    Add Fuentes configuration in your config.exs like below:
+        config :fuentes,
           resource: #{binding[:module]},
           repo: #{binding[:base]}.Repo
 
@@ -107,13 +107,13 @@ defmodule Mix.Tasks.Fuentes.Install do
 
   defp raise_with_help do
     Mix.raise """
-    mix passport.install expects both singular and plural names
+    mix fuentes.install expects both singular and plural names
 
-        mix passport.install User users
+        mix fuentes.install User users
 
         or just type without any arguments to create a User resource
 
-        mix passport.install
+        mix fuentes.install
     """
   end
 
@@ -126,6 +126,6 @@ defmodule Mix.Tasks.Fuentes.Install do
   defp pad(i), do: to_string(i)
 
   defp paths do
-    [".", :passport]
+    [".", :fuentes]
   end
 end

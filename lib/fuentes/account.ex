@@ -70,44 +70,65 @@ defmodule Fuentes.Account do
     |> validate_inclusion(:type, @account_types)
   end
 
-  def balance(account = %Account { type: "Asset" }) do
-    credits = Account
-      |> Account.credit_sum
-      |> Repo.get(account.id)
+  def balance(account = %Account { type: type }, repo) do
+    credits = account
+      |> Account.credit_sum(repo)
 
-    debits = Account
-      |> Account.debit_sum
-      |> Repo.get(account.id)
+    debits = account
+      |> Account.debit_sum(repo)
 
-    credits - debits
-  end
-
-  def balance(account) do
-      debit_sum(account) - credit_sum(account)
+    if type in ["Asset", "Expense"] do
+      balance = Decimal.sub(debits, credits)
+    else
+      balance = Decimal.sub(credits, debits)
+    end
   end
 
   def with_amounts(query) do
     from q in query, preload: [:credit_amounts, :debit_amounts]
   end
 
-  def sum(account) do
-    #from amount in Fuentes.Amount, join: account in assoc(amount, :account), select: [sum(amount.amount)]
+  def credit_sum(account = %Account{}, repo) do
+    [credit_sum] =
+      account
+      |> Account.credit_sum_query
+      |> repo.all
+      IO.inspect credit_sum
+    if credit_sum do
+      credit_sum
+    else
+      Decimal.new(0)
+    end
+  end
+
+  def debit_sum(account = %Account{}, repo) do
+    [debit_sum] =
+      account
+      |> Account.debit_sum_query
+      |> repo.all
+    IO.inspect debit_sum
+
+    if debit_sum do
+      debit_sum
+    else
+      Decimal.new(0)
+    end
   end
 
   # Account |> Account.credit_sum |> Repo.get(1) [Repo.get(Account.credit_sum(Account),1)]
-  def credit_sum(account = %Account{}) do
+  def credit_sum_query(account = %Account{}) do
     from amount in Fuentes.CreditAmount,
      where: amount.account_id == ^account.id,
      #join: account in assoc(amount, :account),
      #where: amount.type == "Credit",
-     select: [sum(amount.amount)]
+     select: sum(amount.amount)
   end
 
-  def debit_sum(account = %Account{}) do
+  def debit_sum_query(account = %Account{}) do
     from amount in Fuentes.DebitAmount,
       where: amount.account_id == ^account.id,
       #join: account in assoc(amount, :account),
       #where: amount.type == "Debit",
-      select: [sum(amount.amount)]
+      select: sum(amount.amount)
   end
 end
