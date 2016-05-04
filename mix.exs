@@ -28,8 +28,8 @@ defmodule Fuentes.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:postgrex, :ecto, :logger],
-      mod: {Fuentes, []}]
+    [applications: [:postgrex, :ecto, :logger]]#,
+      #mod: {Fuentes, []}]
   end
 
   # Dependencies can be Hex packages:
