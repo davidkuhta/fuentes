@@ -1,4 +1,6 @@
 defmodule Fuentes.AccountTest do
+  use Fuentes.EctoCase
+  alias Fuentes.TestRepo
   alias Fuentes.Account
 
   @valid_attrs %{name: "A valid account name", type: "Asset"}

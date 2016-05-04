@@ -1,5 +1,7 @@
 use Mix.Config
 
+config :fuentes, ecto_repos: [Fuentes.TestRepo]
+
 config :fuentes, Fuentes.TestRepo,
   hostname: "localhost",
   database: "fuentes_test",
@@ -7,5 +9,3 @@ config :fuentes, Fuentes.TestRepo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :logger, level: :warn
-
-config :fuentes, ecto_repos: [Fuentes.TestRepo]
