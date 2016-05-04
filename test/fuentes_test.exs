@@ -1,5 +1,7 @@
 defmodule FuentesTest do
-  use ExUnit.Case
+  use Fuentes.EctoCase
+  alias Fuentes.TestRepo
+  
   doctest Fuentes
   doctest Fuentes.Account
 

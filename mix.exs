@@ -6,6 +6,7 @@ defmodule Fuentes.Mixfile do
     [app: :fuentes,
      version: @version,
      elixir: "~> 1.2",
+     elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps,
@@ -69,4 +70,8 @@ defmodule Fuentes.Mixfile do
       "test": ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
+
+  defp elixirc_paths(:test), do: elixirc_paths ++ ["test/support"]
+  defp elixirc_paths(_), do: elixirc_paths
+  defp elixirc_paths, do: ["lib"]
 end
