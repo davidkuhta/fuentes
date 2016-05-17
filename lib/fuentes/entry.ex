@@ -31,7 +31,6 @@ defmodule Fuentes.Entry do
     |> cast(params, @fields)
     |> validate_required([:description, :date])
     |> cast_assoc(:amounts)
-    # |> cast_assoc(:debit_amounts)
     |> validate_debits_and_credits_balance
   end
 
@@ -63,18 +62,15 @@ defmodule Fuentes.Entry do
 
   def validate_debits_and_credits_balance(changeset) do
     amounts = Ecto.Changeset.get_field(changeset, :amounts)
-    IO.inspect amounts
     amounts = Enum.group_by(amounts, fn(i) -> i.type end)
-    IO.inspect amounts
-    IO.inspect amounts["credit"]
+
     credit_sum = Enum.reduce(amounts["credit"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(i.amount,acc) end )
     debit_sum = Enum.reduce(amounts["debit"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(i.amount,acc) end )
-    IO.inspect credit_sum
-    IO.inspect debit_sum
+
     if credit_sum == debit_sum do
       changeset
     else
-      add_error(changeset, :amounts, "Credits must equal debits")
+      add_error(changeset, :amounts, "Credit and Debit amounts must be equal")
     end
   end
 

@@ -14,7 +14,7 @@ defmodule Fuentes.Amount do
   import Ecto.Changeset
   import Ecto.Query, only: [from: 1, from: 2]
 
-  schema "credit_amounts" do
+  schema "amounts" do
     field :amount, :decimal
     field :type, :string
 

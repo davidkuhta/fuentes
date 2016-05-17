@@ -94,7 +94,7 @@ defmodule Fuentes.Account do
       account
       |> Account.credit_sum_query
       |> repo.all
-      IO.inspect credit_sum
+      
     if credit_sum do
       credit_sum
     else
@@ -107,7 +107,6 @@ defmodule Fuentes.Account do
       account
       |> Account.debit_sum_query
       |> repo.all
-    IO.inspect debit_sum
 
     if debit_sum do
       debit_sum
