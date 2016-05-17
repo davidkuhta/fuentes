@@ -46,8 +46,9 @@ defmodule Fuentes.Account do
     field :contra, :boolean, default: false
     field :balance, :decimal, virtual: true
 
-    has_many :debit_amounts, Fuentes.DebitAmount, on_delete: :delete_all
-    has_many :credit_amounts, Fuentes.CreditAmount, on_delete: :delete_all
+    has_many :amounts, Fuentes.Amount, on_delete: :delete_all
+    # has_many :debit_amounts, Fuentes.DebitAmount, on_delete: :delete_all
+    # has_many :credit_amounts, Fuentes.CreditAmount, on_delete: :delete_all
 
     timestamps
   end
@@ -117,18 +118,18 @@ defmodule Fuentes.Account do
 
   # Account |> Account.credit_sum |> Repo.get(1) [Repo.get(Account.credit_sum(Account),1)]
   def credit_sum_query(account = %Account{}) do
-    from amount in Fuentes.CreditAmount,
+    from amount in Fuentes.Amount,
      where: amount.account_id == ^account.id,
      #join: account in assoc(amount, :account),
-     #where: amount.type == "Credit",
+     where: amount.type == "credit",
      select: sum(amount.amount)
   end
 
   def debit_sum_query(account = %Account{}) do
-    from amount in Fuentes.DebitAmount,
+    from amount in Fuentes.Amount,
       where: amount.account_id == ^account.id,
       #join: account in assoc(amount, :account),
-      #where: amount.type == "Debit",
+      where: amount.type == "debit",
       select: sum(amount.amount)
   end
 end

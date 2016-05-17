@@ -9,8 +9,10 @@ defmodule Fuentes.Entry do
     field :description, :string
     field :date, Ecto.Date
 
-    has_many :debit_amounts, Fuentes.DebitAmount, on_delete: :delete_all
-    has_many :credit_amounts, Fuentes.CreditAmount, on_delete: :delete_all
+    has_many :amounts, Fuentes.Amount, on_delete: :delete_all
+
+    # has_many :debit_amounts, Fuentes.DebitAmount, on_delete: :delete_all
+    # has_many :credit_amounts, Fuentes.CreditAmount, on_delete: :delete_all
 
     timestamps
   end
@@ -28,34 +30,52 @@ defmodule Fuentes.Entry do
     model
     |> cast(params, @fields)
     |> validate_required([:description, :date])
-    |> cast_assoc(:credit_amounts)
-    |> cast_assoc(:debit_amounts)
+    |> cast_assoc(:amounts)
+    # |> cast_assoc(:debit_amounts)
+    |> validate_debits_and_credits_balance
   end
 
   def credit_amounts(entry) do
-    from amount in Fuentes.CreditAmount,
-     join: entry in assoc(amount, :entry)
+    from amount in Fuentes.Amount,
+     join: entry in assoc(amount, :entry),
+     where: amount.type == "credit"
   end
 
   def debit_amounts(entry) do
-    from amount in Fuentes.DebitAmount,
-     join: entry in assoc(amount, :entry)
+    from amount in Fuentes.Amount,
+     join: entry in assoc(amount, :entry),
+     where: amount.type == "debit"
   end
 
   def credit_sum(entry) do
     from amount in Fuentes.CreditAmount,
      join: entry in assoc(amount, :entry),
+     where: amount.type == "credit",
      select: [sum(amount.amount)]
   end
 
   def debit_sum(entry) do
     from amount in Fuentes.DebitAmount,
      join: entry in assoc(amount, :entry),
+     where: amount.type == "debit",
      select: [sum(amount.amount)]
   end
 
-  def validate_sum_zero(changeset) do
-    IO.inspect changeset
+  def validate_debits_and_credits_balance(changeset) do
+    amounts = Ecto.Changeset.get_field(changeset, :amounts)
+    IO.inspect amounts
+    amounts = Enum.group_by(amounts, fn(i) -> i.type end)
+    IO.inspect amounts
+    IO.inspect amounts["credit"]
+    credit_sum = Enum.reduce(amounts["credit"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(i.amount,acc) end )
+    debit_sum = Enum.reduce(amounts["debit"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(i.amount,acc) end )
+    IO.inspect credit_sum
+    IO.inspect debit_sum
+    if credit_sum == debit_sum do
+      changeset
+    else
+      add_error(changeset, :amounts, "Credits must equal debits")
+    end
   end
 
 end
