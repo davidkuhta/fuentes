@@ -7,36 +7,6 @@ defmodule Fuentes.AccountTest do
   alias Fuentes.TestFactory
   alias Fuentes.{Account}
 
-  asset = TestFactory.insert(%Fuentes.Account{
-      name: "My Assets",
-      type: "Asset",
-      contra: false
-    })
-
-  liability = TestFactory.insert(%Fuentes.Account{
-      name: "Liability",
-      type: "Liability",
-      contra: false
-    })
-
-  equity = TestFactory.insert(%Fuentes.Account{
-      name: "Owner Equity",
-      type: "Equity",
-      contra: false
-    })
-
-  revenue = TestFactory.insert(%Fuentes.Account{
-      name: "My Revenue",
-      type: "Revenue",
-      contra: false
-    })
-
-  expense = TestFactory.insert(%Fuentes.Account{
-      name: "My Expenses",
-      type: "Expense",
-      contra: false
-    })
-
   @valid_attrs %{name: "A valid account name", type: "Asset", contra: false}
   @invalid_attrs %{}
 
@@ -51,8 +21,13 @@ defmodule Fuentes.AccountTest do
   end
 
   test "should build an account" do
-    account = TestFactory.insert(:account)
-    IO.inspect account
-    assert %Account{} = account
+    asset = TestFactory.insert(:account)
+    IO.inspect asset
+    liability = TestFactory.insert(:account, name: "Liabilities", type: "Liability")
+    equity = TestFactory.insert(:account, name: "Equity", type: "Equity")
+    revenue = TestFactory.insert(:account, name: "Revenue", type: "Revenue")
+    expense = TestFactory.insert(:account, name: "Expense", type: "Expense")
+    IO.inspect liability
+    assert %Account{} = asset
   end
 end

@@ -1,5 +1,6 @@
-#Mix.Task.run "ecto.create", ["quiet", "-r", "Fuentes.TestRepo"]
-#Mix.Task.run "ecto.migrate", ["-r", "Fuentes.TestRepo"]
+Mix.Task.run "ecto.drop", ["quiet", "-r", "Fuentes.TestRepo"]
+Mix.Task.run "ecto.create", ["quiet", "-r", "Fuentes.TestRepo"]
+Mix.Task.run "ecto.migrate", ["-r", "Fuentes.TestRepo"]
 
 {:ok, _} = Application.ensure_all_started(:ex_machina)
 
