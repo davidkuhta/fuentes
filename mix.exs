@@ -45,7 +45,8 @@ defmodule Fuentes.Mixfile do
     [
       #{:ecto, git: "https://github.com/elixir-lang/ecto", tag: "v2.0.0-rc.4"},
       {:ecto, git: "https://github.com/elixir-lang/ecto", branch: "master"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+      {:ex_machina, git: "https://github.com/thoughtbot/ex_machina", branch: "master", only: :test}
     ]
   end
 
@@ -69,7 +70,7 @@ defmodule Fuentes.Mixfile do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
+      #{}"test": ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 

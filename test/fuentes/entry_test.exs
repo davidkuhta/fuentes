@@ -1,9 +1,7 @@
 defmodule Fuentes.EntryTest do
   use Fuentes.EctoCase
-  alias Fuentes.TestRepo
-  alias Fuentes.Account
-  alias Fuentes.Entry
-  alias Fuentes.Amount
+  
+  alias Fuentes.{Amount, Entry}
 
   @valid_attrs %{
     description: "Purchased a Lamborghini",
@@ -25,7 +23,6 @@ defmodule Fuentes.EntryTest do
                  %Amount{ amount: Decimal.new(50000.00), type: "debit", account_id: 1 } ,
                  %Amount{ amount: Decimal.new(75000.00), type: "debit", account_id: 1 } ]
     }
-    IO.inspect changeset
     assert changeset.valid?
   end
 
@@ -37,7 +34,6 @@ defmodule Fuentes.EntryTest do
                  %Amount{ amount: Decimal.new(50000.00), type: "debit", account_id: 1 } ,
                  %Amount{ amount: Decimal.new(76000.00), type: "debit", account_id: 1 } ]
     }
-    IO.inspect changeset
     refute changeset.valid?
   end
 end

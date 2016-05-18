@@ -71,14 +71,11 @@ defmodule Fuentes.Account do
     |> validate_inclusion(:type, @account_types)
   end
 
-  def balance(account = %Account { type: type }, repo) do
-    credits = account
-      |> Account.credit_sum(repo)
+  def balance(account = %Account { type: type, contra: contra }, repo) do
+    credits = Account.credit_sum(account, repo)
+    debits =  Account.debit_sum(account, repo)
 
-    debits = account
-      |> Account.debit_sum(repo)
-
-    if type in ["Asset", "Expense"] do
+    if type in ["Asset", "Expense"] && !(contra) do
       balance = Decimal.sub(debits, credits)
     else
       balance = Decimal.sub(credits, debits)
@@ -90,11 +87,8 @@ defmodule Fuentes.Account do
   end
 
   def credit_sum(account = %Account{}, repo) do
-    [credit_sum] =
-      account
-      |> Account.credit_sum_query
-      |> repo.all
-      
+    [credit_sum] = account |> Account.credit_sum_query |> repo.all
+
     if credit_sum do
       credit_sum
     else
@@ -103,10 +97,7 @@ defmodule Fuentes.Account do
   end
 
   def debit_sum(account = %Account{}, repo) do
-    [debit_sum] =
-      account
-      |> Account.debit_sum_query
-      |> repo.all
+    [debit_sum] = account |> Account.debit_sum_query |> repo.all
 
     if debit_sum do
       debit_sum
@@ -130,5 +121,18 @@ defmodule Fuentes.Account do
       #join: account in assoc(amount, :account),
       where: amount.type == "debit",
       select: sum(amount.amount)
+  end
+
+  def trial_balance(repo) do
+      accounts = repo.all(Fuentes.Account)
+      accounts = Enum.group_by(accounts, fn(i) -> i.type end)
+      
+      asset_sum = Enum.reduce(accounts["Asset"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(Fuentes.balance(i, repo), acc) end)
+      liability_sum = Enum.reduce(accounts["Liability"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(Fuentes.balance(i, repo), acc) end)
+      equity_sum = Enum.reduce(accounts["Equity"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(Fuentes.balance(i, repo), acc) end)
+      revenue_sum = Enum.reduce(accounts["Revenue"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(Fuentes.balance(i, repo), acc) end)
+      expense_sum = Enum.reduce(accounts["Expense"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(Fuentes.balance(i, repo), acc) end)
+
+      trial_balance = asset_sum - (liability_sum + equity_sum + revenue_sum - expense_sum)
   end
 end
