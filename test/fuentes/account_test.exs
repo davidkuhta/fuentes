@@ -5,7 +5,7 @@ defmodule Fuentes.AccountTest do
   :ok = Ecto.Adapters.SQL.Sandbox.checkout(Fuentes.TestRepo)
 
   alias Fuentes.TestFactory
-  alias Fuentes.{Account}
+  alias Fuentes.{Account, TestRepo}
 
   @valid_attrs %{name: "A valid account name", type: "asset", contra: false}
   @invalid_attrs %{}
@@ -20,15 +20,24 @@ defmodule Fuentes.AccountTest do
     refute changeset.valid?
   end
 
-  test "should build an account" do
+  test "trial balance zero with and without entries" do
     asset = TestFactory.insert(:account)
-    #IO.inspect asset
     liability = TestFactory.insert(:account, name: "Liabilities", type: "liability")
-    equity = TestFactory.insert(:account, name: "Equity", type: "equity")
-    revenue = TestFactory.insert(:account, name: "Revenue", type: "revenue")
-    expense = TestFactory.insert(:account, name: "Expense", type: "expense")
-    #IO.inspect liability
-    IO.inspect Fuentes.Account.trial_balance(Fuentes.TestRepo)
-    assert %Account{} = asset
+    TestFactory.insert(:account, name: "Equity", type: "equity")
+    TestFactory.insert(:account, name: "Revenue", type: "revenue")
+    TestFactory.insert(:account, name: "Expense", type: "expense")
+
+    pristine_balance = Account.trial_balance(TestRepo)
+    assert pristine_balance == Decimal.new(0.0)
+
+    TestFactory.insert(:entry)
+
+    entried_balance = Decimal.to_integer(Account.trial_balance(TestRepo))
+    assert entried_balance == 0
+
+    TestFactory.insert(:entry, amounts: [ TestFactory.build(:credit) ])
+    unbalanced = Decimal.to_integer(Account.trial_balance(TestRepo))
+    refute unbalanced == 0
   end
+
 end
