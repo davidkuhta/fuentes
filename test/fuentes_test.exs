@@ -8,7 +8,6 @@ defmodule FuentesTest do
   #end
 
   use Fuentes.EctoCase
-  alias Fuentes.TestRepo
 
   doctest Fuentes
   doctest Fuentes.Account

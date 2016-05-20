@@ -21,8 +21,8 @@ defmodule Fuentes.AccountTest do
   end
 
   test "trial balance zero with and without entries" do
-    asset = TestFactory.insert(:account)
-    liability = TestFactory.insert(:account, name: "Liabilities", type: "liability")
+    TestFactory.insert(:account)
+    TestFactory.insert(:account, name: "Liabilities", type: "liability")
     TestFactory.insert(:account, name: "Equity", type: "equity")
     TestFactory.insert(:account, name: "Revenue", type: "revenue")
     TestFactory.insert(:account, name: "Expense", type: "expense")

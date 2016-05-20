@@ -36,7 +36,6 @@ defmodule Fuentes.Account do
   """
 
   use Ecto.Schema
-  import Ecto
   import Ecto.Changeset
   import Ecto.Query, only: [from: 1, from: 2]
 
@@ -55,7 +54,8 @@ defmodule Fuentes.Account do
 
   @fields ~w(name type contra)
 
-  @account_types ["asset", "liability", "equity", "revenue", "expense"]
+  @credit_types ["asset", "expense"]
+  @debit_types ["liability", "equity", "revenue"]
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -68,14 +68,14 @@ defmodule Fuentes.Account do
     model
     |> cast(params, @fields)
     |> validate_required([:name, :type])
-    |> validate_inclusion(:type, @account_types)
+    |> validate_inclusion(:type, @credit_types ++ @debit_types)
   end
 
   def balance(account = %Account { type: type, contra: contra }, repo) do
     credits = Account.credit_sum(account, repo)
     debits =  Account.debit_sum(account, repo)
 
-    if type in ["asset", "expense"] && !(contra) do
+    if type in @credit_types && !(contra) do
       balance = Decimal.sub(debits, credits)
     else
       balance = Decimal.sub(credits, debits)
@@ -126,9 +126,7 @@ defmodule Fuentes.Account do
   def trial_balance(repo) do
       accounts = repo.all(Fuentes.Account)
       accounts_by_type = Enum.group_by(accounts, fn(i) -> String.to_atom(i.type) end)
-      #for {account_type, accounts} <- accounts_by_type do
-      #  {account_type, Enum.reduce(accounts, Decimal.new(0.0), fn(account, acc) -> Decimal.add(Account.balance(account, repo), acc) end)}
-      #end
+
       accounts_by_type = Enum.map(accounts_by_type, fn { account_type, accounts } ->
         { account_type, Enum.reduce(accounts, Decimal.new(0.0), fn(account, acc) ->
             Decimal.add(Account.balance(account, repo), acc)
@@ -136,12 +134,10 @@ defmodule Fuentes.Account do
         }
       end)
 
-      trial_balance =
-        accounts_by_type[:asset]
-        |> Decimal.sub(accounts_by_type[:liability])
-        |> Decimal.sub(accounts_by_type[:equity])
-        |> Decimal.sub(accounts_by_type[:revenue])
-        |> Decimal.add(accounts_by_type[:expense])
-      #trial_balance = asset_sum - (liability_sum + equity_sum + revenue_sum - expense_sum)
+      accounts_by_type[:asset]
+      |> Decimal.sub(accounts_by_type[:liability])
+      |> Decimal.sub(accounts_by_type[:equity])
+      |> Decimal.sub(accounts_by_type[:revenue])
+      |> Decimal.add(accounts_by_type[:expense])
   end
 end
