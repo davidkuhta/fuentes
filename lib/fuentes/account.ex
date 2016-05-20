@@ -73,23 +73,6 @@ defmodule Fuentes.Account do
     from q in query, preload: [:amounts]
   end
 
-  # def sum_query(account = %Account{}, type) do
-  #   from amount in Amount,
-  #   where: amount.account_id == ^account.id,
-  #   where: amount.type == ^type,
-  #   select: sum(amount.amount)
-  # end
-
-  # def amount_sum(account, type, repo) do
-  #   [sum] = account |> Account.sum_query(type) |> repo.all
-  #
-  #   if sum do
-  #     sum
-  #   else
-  #     Decimal.new(0)
-  #   end
-  # end
-
   def amount_sum(account, type, repo) do
     [[sum]] = Amount |> Amount.for_account(account) |> Amount.sum_type(type) |> repo.all
 

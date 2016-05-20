@@ -49,22 +49,10 @@ defmodule Fuentes.Amount do
      where: p.id == ^entry.id
   end
 
-
-
-
-  def sum_query(account = %Account{}, type) do
-    from amount in Amount,
-    where: amount.account_id == ^account.id,
-    where: amount.type == ^type,
-    select: sum(amount.amount)
-  end
-
   def for_account(query, account) do
     from c in query,
      join: p in assoc(c, :account),
-    where: p.id == ^account.id#,
-    # where: c.type == ^type#,
-     #select: [sum(c.amount)]
+    where: p.id == ^account.id
   end
 
   def sum_type(query, type) do
