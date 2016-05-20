@@ -33,7 +33,7 @@ defmodule Fuentes.Account do
    @see http://en.wikipedia.org/wiki/Debits_and_credits Debits, Credits, and Contra Accounts
 
   """
-  alias Fuentes.{ Account, Amount}
+  alias Fuentes.{ Account, Amount }
 
   use Ecto.Schema
   import Ecto.Changeset
