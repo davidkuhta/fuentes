@@ -125,14 +125,24 @@ defmodule Fuentes.Account do
 
   def trial_balance(repo) do
       accounts = repo.all(Fuentes.Account)
-      accounts = Enum.group_by(accounts, fn(i) -> i.type end)
-      
-      asset_sum = Enum.reduce(accounts["Asset"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(Fuentes.balance(i, repo), acc) end)
-      liability_sum = Enum.reduce(accounts["Liability"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(Fuentes.balance(i, repo), acc) end)
-      equity_sum = Enum.reduce(accounts["Equity"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(Fuentes.balance(i, repo), acc) end)
-      revenue_sum = Enum.reduce(accounts["Revenue"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(Fuentes.balance(i, repo), acc) end)
-      expense_sum = Enum.reduce(accounts["Expense"], Decimal.new(0.0), fn(i, acc) -> Decimal.add(Fuentes.balance(i, repo), acc) end)
+      accounts_by_type = Enum.group_by(accounts, fn(i) -> String.to_atom(i.type) end)
+      #for {account_type, accounts} <- accounts_by_type do
+      #  {account_type, Enum.reduce(accounts, Decimal.new(0.0), fn(account, acc) -> Decimal.add(Account.balance(account, repo), acc) end)}
+      #end
+      accounts_by_type = Enum.map(accounts_by_type, fn { account_type, accounts } ->
+        { account_type, Enum.reduce(accounts, Decimal.new(0.0), fn(account, acc) ->
+            Decimal.add(Account.balance(account, repo), acc)
+          end)
+        }
+      end)
+      IO.inspect accounts_by_type
 
-      trial_balance = asset_sum - (liability_sum + equity_sum + revenue_sum - expense_sum)
+      trial_balance =
+        accounts_by_type[:Asset]
+        |> Decimal.sub(accounts_by_type[:Liability])
+        |> Decimal.sub(accounts_by_type[:Equity])
+        |> Decimal.sub(accounts_by_type[:Revenue])
+        |> Decimal.add(accounts_by_type[:Expense])
+      #trial_balance = asset_sum - (liability_sum + equity_sum + revenue_sum - expense_sum)
   end
 end

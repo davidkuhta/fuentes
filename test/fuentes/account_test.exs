@@ -22,12 +22,13 @@ defmodule Fuentes.AccountTest do
 
   test "should build an account" do
     asset = TestFactory.insert(:account)
-    IO.inspect asset
+    #IO.inspect asset
     liability = TestFactory.insert(:account, name: "Liabilities", type: "Liability")
     equity = TestFactory.insert(:account, name: "Equity", type: "Equity")
     revenue = TestFactory.insert(:account, name: "Revenue", type: "Revenue")
     expense = TestFactory.insert(:account, name: "Expense", type: "Expense")
-    IO.inspect liability
+    #IO.inspect liability
+    IO.inspect Fuentes.Account.trial_balance(Fuentes.TestRepo)
     assert %Account{} = asset
   end
 end
