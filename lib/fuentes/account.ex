@@ -55,7 +55,7 @@ defmodule Fuentes.Account do
 
   @fields ~w(name type contra)
 
-  @account_types ["Asset", "Liability", "Equity", "Revenue", "Expense"]
+  @account_types ["asset", "liability", "equity", "revenue", "expense"]
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -75,7 +75,7 @@ defmodule Fuentes.Account do
     credits = Account.credit_sum(account, repo)
     debits =  Account.debit_sum(account, repo)
 
-    if type in ["Asset", "Expense"] && !(contra) do
+    if type in ["asset", "expense"] && !(contra) do
       balance = Decimal.sub(debits, credits)
     else
       balance = Decimal.sub(credits, debits)
@@ -135,14 +135,13 @@ defmodule Fuentes.Account do
           end)
         }
       end)
-      IO.inspect accounts_by_type
 
       trial_balance =
-        accounts_by_type[:Asset]
-        |> Decimal.sub(accounts_by_type[:Liability])
-        |> Decimal.sub(accounts_by_type[:Equity])
-        |> Decimal.sub(accounts_by_type[:Revenue])
-        |> Decimal.add(accounts_by_type[:Expense])
+        accounts_by_type[:asset]
+        |> Decimal.sub(accounts_by_type[:liability])
+        |> Decimal.sub(accounts_by_type[:equity])
+        |> Decimal.sub(accounts_by_type[:revenue])
+        |> Decimal.add(accounts_by_type[:expense])
       #trial_balance = asset_sum - (liability_sum + equity_sum + revenue_sum - expense_sum)
   end
 end

@@ -7,7 +7,7 @@ defmodule Fuentes.AccountTest do
   alias Fuentes.TestFactory
   alias Fuentes.{Account}
 
-  @valid_attrs %{name: "A valid account name", type: "Asset", contra: false}
+  @valid_attrs %{name: "A valid account name", type: "asset", contra: false}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do
@@ -23,10 +23,10 @@ defmodule Fuentes.AccountTest do
   test "should build an account" do
     asset = TestFactory.insert(:account)
     #IO.inspect asset
-    liability = TestFactory.insert(:account, name: "Liabilities", type: "Liability")
-    equity = TestFactory.insert(:account, name: "Equity", type: "Equity")
-    revenue = TestFactory.insert(:account, name: "Revenue", type: "Revenue")
-    expense = TestFactory.insert(:account, name: "Expense", type: "Expense")
+    liability = TestFactory.insert(:account, name: "Liabilities", type: "liability")
+    equity = TestFactory.insert(:account, name: "Equity", type: "equity")
+    revenue = TestFactory.insert(:account, name: "Revenue", type: "revenue")
+    expense = TestFactory.insert(:account, name: "Expense", type: "expense")
     #IO.inspect liability
     IO.inspect Fuentes.Account.trial_balance(Fuentes.TestRepo)
     assert %Account{} = asset

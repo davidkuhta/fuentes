@@ -6,7 +6,7 @@ defmodule Fuentes.TestFactory do
   def account_factory do
     %Fuentes.Account{
       name: "My Assets",
-      type: "Asset",
+      type: "asset",
       contra: false
     }
   end
