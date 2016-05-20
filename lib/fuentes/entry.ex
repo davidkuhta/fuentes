@@ -32,39 +32,6 @@ defmodule Fuentes.Entry do
     |> validate_debits_and_credits_balance
   end
 
-  def credit_amounts(_entry) do
-    from amount in Fuentes.Amount,
-     join: entry in assoc(amount, :entry),
-     where: amount.type == "credit"
-  end
-
-  def debit_amounts(_entry) do
-    from amount in Fuentes.Amount,
-     join: entry in assoc(amount, :entry),
-     where: amount.type == "debit"
-  end
-
-  # def credit_sum(_entry) do
-  #   from amount in Fuentes.CreditAmount,
-  #    join: entry in assoc(amount, :entry),
-  #    where: amount.type == "credit",
-  #    select: [sum(amount.amount)]
-  # end
-  #
-  # def debit_sum(_entry) do
-  #   from amount in Fuentes.DebitAmount,
-  #    join: entry in assoc(amount, :entry),
-  #    where: amount.type == "debit",
-  #    select: [sum(amount.amount)]
-  # end
-
-  # def amounts(_entry, type) do
-  #   from amount in Amount,
-  #   join: entry in assoc(amount, :entry),
-  #   where: amount.type == ^type,
-  #   #select: [sum(amount.amount)]
-  # end
-
   def validate_debits_and_credits_balance(changeset) do
     amounts = Ecto.Changeset.get_field(changeset, :amounts)
     amounts = Enum.group_by(amounts, fn(i) -> i.type end)
@@ -79,11 +46,15 @@ defmodule Fuentes.Entry do
     end
   end
 
-  def balance(entry = %Entry{}, repo) do
+  def balanced?(entry = %Entry{}, repo) do
     credits = Amount |> Amount.for_entry(entry) |> Amount.sum_type("credit") |> repo.all
     debits = Amount |> Amount.for_entry(entry) |> Amount.sum_type("debit") |> repo.all
     IO.inspect credits
     IO.inspect debits
+    if (debits - credits) = 0
+      true
+    else
+      false
+    end
   end
-
 end
