@@ -1,6 +1,5 @@
 # lib/fuentes/account.ex
 defmodule Fuentes.Account do
-  alias Fuentes.Account
   @moduledoc false
 
   @doc ~S"""
@@ -34,6 +33,7 @@ defmodule Fuentes.Account do
    @see http://en.wikipedia.org/wiki/Debits_and_credits Debits, Credits, and Contra Accounts
 
   """
+  alias Fuentes.{ Account, Amount}
 
   use Ecto.Schema
   import Ecto.Changeset
@@ -75,47 +75,27 @@ defmodule Fuentes.Account do
     from q in query, preload: [:amounts]
   end
 
-  def credit_sum(account = %Account{}, repo) do
-    [credit_sum] = account |> Account.credit_sum_query |> repo.all
+  def sum_query(account = %Account{}, type) do
+    from amount in Amount,
+    where: amount.account_id == ^account.id,
+    where: amount.type == ^type,
+    select: sum(amount.amount)
+  end
 
-    if credit_sum do
-      credit_sum
+  def amount_sum(account, type, repo) do
+    [sum] = account |> Account.sum_query(type) |> repo.all
+
+    if sum do
+      sum
     else
       Decimal.new(0)
     end
-  end
-
-  def debit_sum(account = %Account{}, repo) do
-    [debit_sum] = account |> Account.debit_sum_query |> repo.all
-
-    if debit_sum do
-      debit_sum
-    else
-      Decimal.new(0)
-    end
-  end
-
-  # Account |> Account.credit_sum |> Repo.get(1) [Repo.get(Account.credit_sum(Account),1)]
-  def credit_sum_query(account = %Account{}) do
-    from amount in Fuentes.Amount,
-     where: amount.account_id == ^account.id,
-     #join: account in assoc(amount, :account),
-     where: amount.type == "credit",
-     select: sum(amount.amount)
-  end
-
-  def debit_sum_query(account = %Account{}) do
-    from amount in Fuentes.Amount,
-      where: amount.account_id == ^account.id,
-      #join: account in assoc(amount, :account),
-      where: amount.type == "debit",
-      select: sum(amount.amount)
   end
 
   # Balance for individual account
   def balance(account = %Account { type: type, contra: contra }, repo) do
-    credits = Account.credit_sum(account, repo)
-    debits =  Account.debit_sum(account, repo)
+    credits = Account.amount_sum(account, "credit", repo)
+    debits =  Account.amount_sum(account, "debit", repo)
 
     if type in @credit_types && !(contra) do
       balance = Decimal.sub(debits, credits)
