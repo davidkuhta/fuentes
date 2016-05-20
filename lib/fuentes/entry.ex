@@ -1,6 +1,7 @@
 # lib/fuentes/account.ex
 defmodule Fuentes.Entry do
-  alias Fuentes.{Entry, Amount}
+  alias Fuentes.{ Amount, Entry }
+
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query, only: [from: 1, from: 2]
@@ -79,8 +80,8 @@ defmodule Fuentes.Entry do
   end
 
   def balance(entry = %Entry{}, repo) do
-    credits = Amount |> Amount.for_entry(entry) |> Amount.sum("credit") |> repo.all
-    debits = Amount |> Amount.for_entry(entry) |> Amount.sum("debit") |> repo.all
+    credits = Amount |> Amount.for_entry(entry) |> Amount.sum_type("credit") |> repo.all
+    debits = Amount |> Amount.for_entry(entry) |> Amount.sum_type("debit") |> repo.all
     IO.inspect credits
     IO.inspect debits
   end
