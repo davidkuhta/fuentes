@@ -1,7 +1,6 @@
 # lib/fuentes/account.ex
 defmodule Fuentes.Entry do
   use Ecto.Schema
-  import Ecto
   import Ecto.Changeset
   import Ecto.Query, only: [from: 1, from: 2]
 
@@ -34,26 +33,26 @@ defmodule Fuentes.Entry do
     |> validate_debits_and_credits_balance
   end
 
-  def credit_amounts(entry) do
+  def credit_amounts(_entry) do
     from amount in Fuentes.Amount,
      join: entry in assoc(amount, :entry),
      where: amount.type == "credit"
   end
 
-  def debit_amounts(entry) do
+  def debit_amounts(_entry) do
     from amount in Fuentes.Amount,
      join: entry in assoc(amount, :entry),
      where: amount.type == "debit"
   end
 
-  def credit_sum(entry) do
+  def credit_sum(_entry) do
     from amount in Fuentes.CreditAmount,
      join: entry in assoc(amount, :entry),
      where: amount.type == "credit",
      select: [sum(amount.amount)]
   end
 
-  def debit_sum(entry) do
+  def debit_sum(_entry) do
     from amount in Fuentes.DebitAmount,
      join: entry in assoc(amount, :entry),
      where: amount.type == "debit",

@@ -71,19 +71,8 @@ defmodule Fuentes.Account do
     |> validate_inclusion(:type, @credit_types ++ @debit_types)
   end
 
-  def balance(account = %Account { type: type, contra: contra }, repo) do
-    credits = Account.credit_sum(account, repo)
-    debits =  Account.debit_sum(account, repo)
-
-    if type in @credit_types && !(contra) do
-      balance = Decimal.sub(debits, credits)
-    else
-      balance = Decimal.sub(credits, debits)
-    end
-  end
-
   def with_amounts(query) do
-    from q in query, preload: [:credit_amounts, :debit_amounts]
+    from q in query, preload: [:amounts]
   end
 
   def credit_sum(account = %Account{}, repo) do
@@ -123,15 +112,32 @@ defmodule Fuentes.Account do
       select: sum(amount.amount)
   end
 
-  def trial_balance(repo) do
-      accounts = repo.all(Fuentes.Account)
+  # Balance for individual account
+  def balance(account = %Account { type: type, contra: contra }, repo) do
+    credits = Account.credit_sum(account, repo)
+    debits =  Account.debit_sum(account, repo)
+
+    if type in @credit_types && !(contra) do
+      balance = Decimal.sub(debits, credits)
+    else
+      balance = Decimal.sub(credits, debits)
+    end
+  end
+
+  # Balance for list of accounts, intended for use when of the same account type.
+  def balance(accounts, repo) when is_list(accounts) do
+    Enum.reduce(accounts, Decimal.new(0.0), fn(account, acc) ->
+       Decimal.add( Account.balance(account, repo), acc)
+    end)
+  end
+
+  # Trial Balance for all accounts
+  def balance(repo) do
+      accounts = repo.all(Account)
       accounts_by_type = Enum.group_by(accounts, fn(i) -> String.to_atom(i.type) end)
 
       accounts_by_type = Enum.map(accounts_by_type, fn { account_type, accounts } ->
-        { account_type, Enum.reduce(accounts, Decimal.new(0.0), fn(account, acc) ->
-            Decimal.add(Account.balance(account, repo), acc)
-          end)
-        }
+        { account_type, Account.balance(accounts, repo) }
       end)
 
       accounts_by_type[:asset]

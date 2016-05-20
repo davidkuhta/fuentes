@@ -23,20 +23,28 @@ defmodule Fuentes.AccountTest do
   test "trial balance zero with and without entries" do
     TestFactory.insert(:account)
     TestFactory.insert(:account, name: "Liabilities", type: "liability")
-    TestFactory.insert(:account, name: "Equity", type: "equity")
+    equity = TestFactory.insert(:account, name: "Equity", type: "equity")
     TestFactory.insert(:account, name: "Revenue", type: "revenue")
     TestFactory.insert(:account, name: "Expense", type: "expense")
+    drawing = TestFactory.insert(:account, name: "Drawing", type: "equity", contra: true)
 
-    pristine_balance = Account.trial_balance(TestRepo)
+    pristine_balance = Account.balance(TestRepo)
     assert pristine_balance == Decimal.new(0.0)
 
     TestFactory.insert(:entry)
 
-    entried_balance = Decimal.to_integer(Account.trial_balance(TestRepo))
+    entried_balance = Decimal.to_integer(Account.balance(TestRepo))
     assert entried_balance == 0
 
+    TestFactory.insert(:entry, amounts: [ TestFactory.build(:credit, account_id: equity.id),
+                                          TestFactory.build(:debit, account_id: drawing.id) ])
+
+    contra_balance = Decimal.to_integer(Account.balance(TestRepo))
+    assert contra_balance == 0
+
     TestFactory.insert(:entry, amounts: [ TestFactory.build(:credit) ])
-    unbalanced = Decimal.to_integer(Account.trial_balance(TestRepo))
+
+    unbalanced = Decimal.to_integer(Account.balance(TestRepo))
     refute unbalanced == 0
   end
 
