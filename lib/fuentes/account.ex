@@ -46,8 +46,6 @@ defmodule Fuentes.Account do
     field :balance, :decimal, virtual: true
 
     has_many :amounts, Fuentes.Amount, on_delete: :delete_all
-    # has_many :debit_amounts, Fuentes.DebitAmount, on_delete: :delete_all
-    # has_many :credit_amounts, Fuentes.CreditAmount, on_delete: :delete_all
 
     timestamps
   end
@@ -75,15 +73,25 @@ defmodule Fuentes.Account do
     from q in query, preload: [:amounts]
   end
 
-  def sum_query(account = %Account{}, type) do
-    from amount in Amount,
-    where: amount.account_id == ^account.id,
-    where: amount.type == ^type,
-    select: sum(amount.amount)
-  end
+  # def sum_query(account = %Account{}, type) do
+  #   from amount in Amount,
+  #   where: amount.account_id == ^account.id,
+  #   where: amount.type == ^type,
+  #   select: sum(amount.amount)
+  # end
+
+  # def amount_sum(account, type, repo) do
+  #   [sum] = account |> Account.sum_query(type) |> repo.all
+  #
+  #   if sum do
+  #     sum
+  #   else
+  #     Decimal.new(0)
+  #   end
+  # end
 
   def amount_sum(account, type, repo) do
-    [sum] = account |> Account.sum_query(type) |> repo.all
+    [[sum]] = Amount |> Amount.for_account(account) |> Amount.sum_type(type) |> repo.all
 
     if sum do
       sum

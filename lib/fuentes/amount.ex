@@ -8,7 +8,7 @@ defmodule Fuentes.Amount do
   An amount must be a subclassed as either a debit or a credit to be saved to the database.
 
   """
-
+  alias Fuentes.{Account, Amount}
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query, only: [from: 1, from: 2]
@@ -49,9 +49,27 @@ defmodule Fuentes.Amount do
      where: p.id == ^entry.id
   end
 
+
+
+
+  def sum_query(account = %Account{}, type) do
+    from amount in Amount,
+    where: amount.account_id == ^account.id,
+    where: amount.type == ^type,
+    select: sum(amount.amount)
+  end
+
   def for_account(query, account) do
     from c in query,
      join: p in assoc(c, :account),
-     where: p.id == ^account.id
+    where: p.id == ^account.id#,
+    # where: c.type == ^type#,
+     #select: [sum(c.amount)]
+  end
+
+  def sum_type(query, type) do
+    from c in query,
+    where: c.type == ^type,
+    select: [sum(c.amount)]
   end
 end

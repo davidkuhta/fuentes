@@ -1,5 +1,6 @@
 # lib/fuentes/account.ex
 defmodule Fuentes.Entry do
+  alias Fuentes.{Entry, Amount}
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query, only: [from: 1, from: 2]
@@ -9,9 +10,6 @@ defmodule Fuentes.Entry do
     field :date, Ecto.Date
 
     has_many :amounts, Fuentes.Amount, on_delete: :delete_all
-
-    # has_many :debit_amounts, Fuentes.DebitAmount, on_delete: :delete_all
-    # has_many :credit_amounts, Fuentes.CreditAmount, on_delete: :delete_all
 
     timestamps
   end
@@ -45,19 +43,26 @@ defmodule Fuentes.Entry do
      where: amount.type == "debit"
   end
 
-  def credit_sum(_entry) do
-    from amount in Fuentes.CreditAmount,
-     join: entry in assoc(amount, :entry),
-     where: amount.type == "credit",
-     select: [sum(amount.amount)]
-  end
+  # def credit_sum(_entry) do
+  #   from amount in Fuentes.CreditAmount,
+  #    join: entry in assoc(amount, :entry),
+  #    where: amount.type == "credit",
+  #    select: [sum(amount.amount)]
+  # end
+  #
+  # def debit_sum(_entry) do
+  #   from amount in Fuentes.DebitAmount,
+  #    join: entry in assoc(amount, :entry),
+  #    where: amount.type == "debit",
+  #    select: [sum(amount.amount)]
+  # end
 
-  def debit_sum(_entry) do
-    from amount in Fuentes.DebitAmount,
-     join: entry in assoc(amount, :entry),
-     where: amount.type == "debit",
-     select: [sum(amount.amount)]
-  end
+  # def amounts(_entry, type) do
+  #   from amount in Amount,
+  #   join: entry in assoc(amount, :entry),
+  #   where: amount.type == ^type,
+  #   #select: [sum(amount.amount)]
+  # end
 
   def validate_debits_and_credits_balance(changeset) do
     amounts = Ecto.Changeset.get_field(changeset, :amounts)
@@ -71,6 +76,13 @@ defmodule Fuentes.Entry do
     else
       add_error(changeset, :amounts, "Credit and Debit amounts must be equal")
     end
+  end
+
+  def balance(entry = %Entry{}, repo) do
+    credits = Amount |> Amount.for_entry(entry) |> Amount.sum("credit") |> repo.all
+    debits = Amount |> Amount.for_entry(entry) |> Amount.sum("debit") |> repo.all
+    IO.inspect credits
+    IO.inspect debits
   end
 
 end
