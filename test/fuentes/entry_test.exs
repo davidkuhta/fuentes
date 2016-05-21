@@ -1,13 +1,13 @@
 defmodule Fuentes.EntryTest do
   use Fuentes.EctoCase
-  
-  alias Fuentes.{Amount, Entry}
 
-  @valid_attrs %{
-    description: "Purchased a Lamborghini",
-    date: %Ecto.Date{ year: 2016, month: 1, day: 16 }
-  }
+  import Fuentes.TestFactory
+  alias Fuentes.{ Amount, Entry }
+
+
+  @valid_attrs params_for(:entry)
   @invalid_attrs %{}
+
   @valid_with_amount_attrs %{
     description: "Purchased a Lamborghini",
     date: %Ecto.Date{ year: 2016, month: 1, day: 16 },

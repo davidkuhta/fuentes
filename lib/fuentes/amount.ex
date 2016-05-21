@@ -9,7 +9,7 @@ defmodule Fuentes.Amount do
 
   """
   alias Fuentes.{ Account, Amount }
-  
+
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query, only: [from: 1, from: 2]
@@ -59,6 +59,25 @@ defmodule Fuentes.Amount do
   def sum_type(query, type) do
     from c in query,
     where: c.type == ^type,
-    select: [sum(c.amount)]
+    select: sum(c.amount)
+  end
+
+  def dated(query, %{from_date: from_date, to_date: to_date}) do
+    from c in query,
+    join: p in assoc(c, :entry),
+    where: p.date >= ^from_date,
+    where: p.date <= ^to_date
+  end
+
+  def dated(query, %{from_date: from_date}) do
+    from c in query,
+    join: p in assoc(c, :entry),
+    where: p.date >= ^from_date
+  end
+
+  def dated(query, %{to_date: to_date}) do
+    from c in query,
+    join: p in assoc(c, :entry),
+    where: p.date <= ^to_date
   end
 end

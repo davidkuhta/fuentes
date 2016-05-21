@@ -14,7 +14,7 @@ defmodule Fuentes.TestFactory do
   def entry_factory do
     %Entry{
       description: "Investing in Koenigsegg",
-      date: %Ecto.Date{ year: 2016, month: 5, day: 16 },
+      date: %Ecto.Date{ year: 2016, month: 1, day: 16 },
       amounts: [ build(:credit), build(:debit) ]
     }
   end

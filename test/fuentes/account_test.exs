@@ -1,13 +1,12 @@
 defmodule Fuentes.AccountTest do
   use Fuentes.EctoCase
-  #import Fuentes.TestFactory
 
   :ok = Ecto.Adapters.SQL.Sandbox.checkout(Fuentes.TestRepo)
 
-  alias Fuentes.TestFactory
+  import Fuentes.TestFactory
   alias Fuentes.{Account, TestRepo}
 
-  @valid_attrs %{name: "A valid account name", type: "asset", contra: false}
+  @valid_attrs params_for(:account)
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do
@@ -21,31 +20,58 @@ defmodule Fuentes.AccountTest do
   end
 
   test "trial balance zero with and without entries" do
-    TestFactory.insert(:account)
-    TestFactory.insert(:account, name: "Liabilities", type: "liability")
-    equity = TestFactory.insert(:account, name: "Equity", type: "equity")
-    TestFactory.insert(:account, name: "Revenue", type: "revenue")
-    TestFactory.insert(:account, name: "Expense", type: "expense")
-    drawing = TestFactory.insert(:account, name: "Drawing", type: "equity", contra: true)
+    asset = insert(:account)
+    insert(:account, name: "Liabilities", type: "liability")
+    insert(:account, name: "Revenue", type: "revenue")
+    insert(:account, name: "Expense", type: "expense")
+    equity = insert(:account, name: "Equity", type: "equity")
+    drawing = insert(:account, name: "Drawing", type: "equity", contra: true)
 
-    pristine_balance = Account.balance(TestRepo)
-    assert pristine_balance == Decimal.new(0.0)
+    assert Account.balance(TestRepo) == Decimal.new(0.0)
 
-    TestFactory.insert(:entry)
+    insert(:entry, amounts: [ build(:credit, account_id: asset.id),
+                              build(:debit, account_id: equity.id) ])
 
-    entried_balance = Decimal.to_integer(Account.balance(TestRepo))
-    assert entried_balance == 0
+    assert Decimal.to_integer(Account.balance(TestRepo)) == 0
 
-    TestFactory.insert(:entry, amounts: [ TestFactory.build(:credit, account_id: equity.id),
-                                          TestFactory.build(:debit, account_id: drawing.id) ])
+    insert(:entry, amounts: [ build(:credit, account_id: equity.id),
+                              build(:debit, account_id: drawing.id) ])
 
-    contra_balance = Decimal.to_integer(Account.balance(TestRepo))
-    assert contra_balance == 0
+    assert Decimal.to_integer(Account.balance(TestRepo)) == 0
 
-    TestFactory.insert(:entry, amounts: [ TestFactory.build(:credit) ])
+    insert(:entry, amounts: [ build(:credit, account_id: asset.id) ])
 
-    unbalanced = Decimal.to_integer(Account.balance(TestRepo))
-    refute unbalanced == 0
+    refute Decimal.to_integer(Account.balance(TestRepo)) == 0
+
+  end
+
+  test "account balances with entries and dates" do
+    insert(:account)
+    insert(:account, name: "Liabilities", type: "liability")
+    insert(:account, name: "Revenue", type: "revenue")
+    insert(:account, name: "Expense", type: "expense")
+    equity = insert(:account, name: "Equity", type: "equity")
+    drawing = insert(:account, name: "Drawing", type: "equity", contra: true)
+
+    insert(:entry, amounts: [ build(:credit, account_id: equity.id),
+                              build(:debit, account_id: drawing.id) ])
+
+    assert Account.balance(equity, TestRepo) ==
+           Account.balance(equity, %{to_date: Ecto.DateTime.from_erl(:calendar.universal_time())}, TestRepo)
+
+    insert(:entry, date: %Ecto.Date{ year: 2016, month: 6, day: 16 },
+            amounts: [ build(:credit, account_id: equity.id),
+                       build(:debit, account_id: drawing.id) ])
+
+    refute Account.balance(equity, TestRepo) ==
+           Account.balance(equity, %{to_date: Ecto.DateTime.from_erl(:calendar.universal_time())}, TestRepo)
+
+    assert Account.balance(equity, TestRepo) ==
+           Account.balance(equity, %{to_date: %Ecto.Date{ year: 2016, month: 6, day: 17 }}, TestRepo)
+
+    refute Account.balance(equity, TestRepo) ==
+           Account.balance(equity, %{to_date: %Ecto.Date{ year: 2015, month: 6, day: 17 }}, TestRepo)
+
   end
 
 end

@@ -74,12 +74,35 @@ defmodule Fuentes.Account do
   end
 
   def amount_sum(account, type, repo) do
-    [[sum]] = Amount |> Amount.for_account(account) |> Amount.sum_type(type) |> repo.all
+    [sum] = Amount |> Amount.for_account(account) |> Amount.sum_type(type) |> repo.all
 
     if sum do
       sum
     else
       Decimal.new(0)
+    end
+  end
+
+  def amount_sum(account, type, dates, repo) do
+    [sum] =
+    Amount |> Amount.for_account(account) |> Amount.dated(dates) |> Amount.sum_type(type) |> repo.all
+
+    if sum do
+      sum
+    else
+      Decimal.new(0)
+    end
+  end
+
+  # Balance for individual account with dates
+  def balance(account = %Account { type: type, contra: contra }, dates, repo) do
+    credits = Account.amount_sum(account, "credit", dates, repo)
+    debits =  Account.amount_sum(account, "debit", dates, repo)
+
+    if type in @credit_types && !(contra) do
+      balance = Decimal.sub(debits, credits)
+    else
+      balance = Decimal.sub(credits, debits)
     end
   end
 

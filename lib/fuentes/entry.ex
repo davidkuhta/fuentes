@@ -51,7 +51,7 @@ defmodule Fuentes.Entry do
     debits = Amount |> Amount.for_entry(entry) |> Amount.sum_type("debit") |> repo.all
     IO.inspect credits
     IO.inspect debits
-    if (debits - credits) = 0
+    if (debits - credits) == 0 do
       true
     else
       false
