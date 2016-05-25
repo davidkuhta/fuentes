@@ -37,16 +37,17 @@ The Account class represents accounts in the system. Each account must be set to
    equity      | Credit            | Owners rights to the Assets
 
    Your Book of Accounts needs to be created prior to recording any entries. The simplest method is to have a number of insert methods in your priv/repo/migrations/seeds.exs file like so:
-
+   ```
    Repo.insert! %Fuentes.Account{ name: "Cash", type: "asset" }
    Repo.insert! %Fuentes.Account{ name: "Liabilities", type: "liabilities" }
    Repo.insert! %Fuentes.Account{ name: "Owner's Equity", type: "equity" }
+   ```
 
 Each account can also be marked as a "Contra Account". A contra account will have it's
 normal balance swapped. For example, to remove equity, a "Drawing" account may be created
 as a contra equity account as follows:
 
- account = %Fuentes.Account{ name: "Drawing", type: "asset", contra: true }
+ `account = %Fuentes.Account{ name: "Drawing", type: "asset", contra: true }`
 
 At all times the balance of all accounts should conform to the "accounting equation"
  Assets = Liabilities + Owner's Equity
