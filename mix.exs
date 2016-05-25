@@ -36,6 +36,7 @@ defmodule Fuentes.Mixfile do
       {:ecto, git: "https://github.com/elixir-lang/ecto", branch: "master"},
       {:postgrex, ">= 0.0.0"},
       {:ex_machina, git: "https://github.com/thoughtbot/ex_machina", branch: "master", only: :test},
+      {:earmark, ">= 0.0.0", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev}
     ]
   end
