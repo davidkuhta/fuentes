@@ -33,10 +33,10 @@ defmodule Fuentes.Mixfile do
 
   defp deps do
     [
-      #{:ecto, git: "https://github.com/elixir-lang/ecto", tag: "v2.0.0-rc.4"},
       {:ecto, git: "https://github.com/elixir-lang/ecto", branch: "master"},
       {:postgrex, ">= 0.0.0"},
-      {:ex_machina, git: "https://github.com/thoughtbot/ex_machina", branch: "master", only: :test}
+      {:ex_machina, git: "https://github.com/thoughtbot/ex_machina", branch: "master", only: :test},
+      {:ex_doc, "~> 0.11", only: :dev}
     ]
   end
 
