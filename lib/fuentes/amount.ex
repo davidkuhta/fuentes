@@ -1,11 +1,8 @@
 # lib/fuentes/amount.ex
 defmodule Fuentes.Amount do
-  @moduledoc false
+  @moduledoc """
 
-  @doc ~S"""
-  The Amount class represents credit amounts in the system.
-
-  An amount must be a subclassed as either a debit or a credit to be saved to the database.
+  An amount must be of either the debit or credit type to be saved to the database.
 
   """
   alias Fuentes.{ Account, Amount }

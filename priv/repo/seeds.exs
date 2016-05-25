@@ -35,7 +35,7 @@ david = TestRepo.insert!(account3_changeset)
 
 
 entry1 = TestRepo.insert! %Entry{
-  description: "Intial Deposit",
+  description: "Initial Deposit",
   date: %Ecto.Date{ year: 2016, month: 1, day: 14 }
 }
 

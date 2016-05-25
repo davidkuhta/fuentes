@@ -1,5 +1,10 @@
 # lib/fuentes/account.ex
 defmodule Fuentes.Entry do
+  @moduledoc """
+  Entries are the recording of account debits and credits and can be considered
+  as consituting a traditional accounting Journal.
+  """
+
   alias Fuentes.{ Amount, Entry }
 
   use Ecto.Schema
@@ -49,8 +54,7 @@ defmodule Fuentes.Entry do
   def balanced?(entry = %Entry{}, repo) do
     credits = Amount |> Amount.for_entry(entry) |> Amount.sum_type("credit") |> repo.all
     debits = Amount |> Amount.for_entry(entry) |> Amount.sum_type("debit") |> repo.all
-    IO.inspect credits
-    IO.inspect debits
+
     if (debits - credits) == 0 do
       true
     else

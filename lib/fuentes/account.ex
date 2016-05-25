@@ -1,38 +1,35 @@
 # lib/fuentes/account.ex
 defmodule Fuentes.Account do
-  @moduledoc false
-
-  @doc ~S"""
-  The Account class represents accounts in the system. Each account must be subclassed as one of the following types:
+  @moduledoc """
+  The Account class represents accounts in the system. Each account must be set to one of the following types:
 
      TYPE        | NORMAL BALANCE    | DESCRIPTION
      --------------------------------------------------------------------------
-     Asset       | Debit             | Resources owned by the Business Entity
-     Liability   | Credit            | Debts owed to outsiders
-     Equity      | Credit            | Owners rights to the Assets
-     Revenue     | Credit            | Increases in owners equity
-     Expense     | Debit             | Assets or services consumed in the generation of revenue
+     asset       | Debit             | Resources owned by the Business Entity
+     liability   | Credit            | Debts owed to outsiders
+     equity      | Credit            | Owners rights to the Assets
 
    Each account can also be marked as a "Contra Account". A contra account will have it's
    normal balance swapped. For example, to remove equity, a "Drawing" account may be created
    as a contra equity account as follows:
 
-     account = %Fuentes.Account{name: "Cash", type: "Asset", contra: false}
+     account = %Fuentes.Account{name: "Drawing", type: "asset", contra: true}
 
    At all times the balance of all accounts should conform to the "accounting equation"
-     Assets = Liabilties + Owner's Equity
+     Assets = Liabilities + Owner's Equity
 
-   Each subclass account acts as it's own ledger. See the individual subclasses for a
-   description.
+   Each account type acts as it's own ledger.
 
-   @abstract
-     An account must be a subclass to be saved to the database. The Account class
-     has a singleton method {trial_balance} to calculate the balance on all Accounts.
-
-   @see http://en.wikipedia.org/wiki/Accounting_equation Accounting Equation
-   @see http://en.wikipedia.org/wiki/Debits_and_credits Debits, Credits, and Contra Accounts
-
+  For more details see:
+  [Wikipedia - Accounting Equation](http://en.wikipedia.org/wiki/Accounting_equation)
+  [Wikipedia - Debits, Credits, and Contra Accounts](http://en.wikipedia.org/wiki/Debits_and_credits)
   """
+
+  @typedoc """
+  Just a number followed by a string.
+  """
+  @type fuentes_account :: {number, String.t}
+
   alias Fuentes.{ Account, Amount }
 
   use Ecto.Schema
@@ -127,17 +124,17 @@ defmodule Fuentes.Account do
 
   # Trial Balance for all accounts
   def balance(repo) do
-      accounts = repo.all(Account)
-      accounts_by_type = Enum.group_by(accounts, fn(i) -> String.to_atom(i.type) end)
+    accounts = repo.all(Account)
+    accounts_by_type = Enum.group_by(accounts, fn(i) -> String.to_atom(i.type) end)
 
-      accounts_by_type = Enum.map(accounts_by_type, fn { account_type, accounts } ->
-        { account_type, Account.balance(accounts, repo) }
-      end)
+    accounts_by_type = Enum.map(accounts_by_type, fn { account_type, accounts } ->
+      { account_type, Account.balance(accounts, repo) }
+    end)
 
-      accounts_by_type[:asset]
-      |> Decimal.sub(accounts_by_type[:liability])
-      |> Decimal.sub(accounts_by_type[:equity])
-      |> Decimal.sub(accounts_by_type[:revenue])
-      |> Decimal.add(accounts_by_type[:expense])
+    accounts_by_type[:asset]
+    |> Decimal.sub(accounts_by_type[:liability])
+    |> Decimal.sub(accounts_by_type[:equity])
+    |> Decimal.sub(accounts_by_type[:revenue])
+    |> Decimal.add(accounts_by_type[:expense])
   end
 end
