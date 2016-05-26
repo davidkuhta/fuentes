@@ -96,9 +96,9 @@
 <p> Each account can also be marked as a “Contra Account”. A contra account will have it’s
  normal balance swapped. For example, to remove equity, a “Drawing” account may be created
  as a contra equity account as follows:</p>
-<p>   account = %Fuentes.Account{name: “Drawing”, type: “asset”, contra: true}</p>
-<p> At all times the balance of all accounts should conform to the “accounting equation”
-   Assets = Liabilities + Owner’s Equity</p>
+<p>   <code class="inline">account = %Fuentes.Account{name: &quot;Drawing&quot;, type: &quot;asset&quot;, contra: true}</code></p>
+<p> At all times the balance of all accounts should conform to the “accounting equation”</p>
+<p>   Assets = Liabilities + Owner’s Equity</p>
 <p> Each account type acts as it’s own ledger.</p>
 <p>For more details see:
 <a href="http://en.wikipedia.org/wiki/Accounting_equation">Wikipedia - Accounting Equation</a>
@@ -138,7 +138,7 @@
   
     <div class="summary-synopsis"><p><a href="#balance/2"><code class="inline">balance/2</code></a> provides the account balance for a list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
 Ecto.Repo inclusive of all entries. This function is intended to be used with a
-list of <code class="inline">Fuentes.Accounts</code> of the same type</p>
+list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a>s of the same type</p>
 </div>
   
 </div>
@@ -189,7 +189,7 @@ Ecto.Repo when provided with a map of dates in the format <code class="inline">%
     </a>
     <span class="signature">balance(repo)</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L132" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L133" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -207,7 +207,7 @@ Ecto.Repo when provided with a map of dates in the format <code class="inline">%
     </a>
     <span class="signature">balance(accounts, repo)</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L110" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L111" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -216,7 +216,7 @@ Ecto.Repo when provided with a map of dates in the format <code class="inline">%
   <section class="docstring">
     <p><a href="#balance/2"><code class="inline">balance/2</code></a> provides the account balance for a list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
 Ecto.Repo inclusive of all entries. This function is intended to be used with a
-list of <code class="inline">Fuentes.Accounts</code> of the same type.</p>
+list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a>s of the same type.</p>
 
   </section>
 </div>
@@ -227,7 +227,7 @@ list of <code class="inline">Fuentes.Accounts</code> of the same type.</p>
     </a>
     <span class="signature">balance(account, dates, repo)</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L93" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L94" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -246,7 +246,7 @@ Ecto.Repo when provided with a map of dates in the format <code class="inline">%
     </a>
     <span class="signature">changeset(model, params \\ %{})</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L54" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L55" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
