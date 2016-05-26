@@ -25,11 +25,6 @@ defmodule Fuentes.Account do
   [Wikipedia - Debits, Credits, and Contra Accounts](http://en.wikipedia.org/wiki/Debits_and_credits)
   """
 
-  @typedoc """
-  Just a number followed by a string.
-  """
-  @type fuentes_account :: {number, String.t}
-
   alias Fuentes.{ Account, Amount }
 
   use Ecto.Schema
@@ -49,14 +44,11 @@ defmodule Fuentes.Account do
 
   @fields ~w(name type contra)
 
-  @credit_types ["asset", "expense"]
-  @debit_types ["liability", "equity", "revenue"]
+  @credit_types ["asset"]
+  @debit_types ["liability", "equity"]
 
   @doc """
-  Creates a changeset based on the `model` and `params`.
-
-  If no params are provided, an invalid changeset is returned
-  with no validation performed.
+  Creates a changeset requiring a `:name` and `:type`
   """
 
   def changeset(model, params \\ %{}) do
@@ -66,10 +58,11 @@ defmodule Fuentes.Account do
     |> validate_inclusion(:type, @credit_types ++ @debit_types)
   end
 
-  def with_amounts(query) do
+  defp with_amounts(query) do
     from q in query, preload: [:amounts]
   end
 
+  @doc false
   def amount_sum(account, type, repo) do
     [sum] = Amount |> Amount.for_account(account) |> Amount.sum_type(type) |> repo.all
 
@@ -80,6 +73,7 @@ defmodule Fuentes.Account do
     end
   end
 
+  @doc false
   def amount_sum(account, type, dates, repo) do
     [sum] =
     Amount |> Amount.for_account(account) |> Amount.dated(dates) |> Amount.sum_type(type) |> repo.all
@@ -91,6 +85,10 @@ defmodule Fuentes.Account do
     end
   end
 
+  @doc """
+  `balance/3 provides the account balance for a given `Fuentes.Account` in a given
+  Ecto.Repo when provided with a map of dates in the format `%{from_date: from_date, to_date: to_date}`.
+  """
   # Balance for individual account with dates
   def balance(account = %Account { type: type, contra: contra }, dates, repo) do
     credits = Account.amount_sum(account, "credit", dates, repo)
@@ -103,6 +101,11 @@ defmodule Fuentes.Account do
     end
   end
 
+  @doc """
+  `balance/2 provides the account balance for a list of `Fuentes.Account` in a given
+  Ecto.Repo inclusive of all entries. This function is intended to be used with a
+  list of `Fuentes.Accounts` of the same type.
+  """
   # Balance for individual account
   def balance(account = %Account { type: type, contra: contra }, repo) do
     credits = Account.amount_sum(account, "credit", repo)
@@ -122,6 +125,9 @@ defmodule Fuentes.Account do
     end)
   end
 
+  @doc """
+  `balance/1` provides the trial balance for all accounts in a given Ecto.Repo.
+  """
   # Trial Balance for all accounts
   def balance(repo) do
     accounts = repo.all(Account)
@@ -134,7 +140,5 @@ defmodule Fuentes.Account do
     accounts_by_type[:asset]
     |> Decimal.sub(accounts_by_type[:liability])
     |> Decimal.sub(accounts_by_type[:equity])
-    |> Decimal.sub(accounts_by_type[:revenue])
-    |> Decimal.add(accounts_by_type[:expense])
   end
 end
