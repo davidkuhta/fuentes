@@ -1,9 +1,8 @@
 # lib/fuentes/amount.ex
 defmodule Fuentes.Amount do
   @moduledoc """
-
-  An amount must be of either the debit or credit type to be saved to the database.
-
+  An Amount represents the individual debit or credit for a given account and is
+  part of a balanced entry.
   """
   alias Fuentes.{ Account, Amount }
 

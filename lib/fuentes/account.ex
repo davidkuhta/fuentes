@@ -1,7 +1,10 @@
 # lib/fuentes/account.ex
 defmodule Fuentes.Account do
   @moduledoc """
-  The Account class represents accounts in the system. Each account must be set to one of the following types:
+  The Account module represents accounts in the system which are of _asset_,
+  _liability_, or _equity_ types, in accordance with the "accounting equation".
+
+  Each account must be set to one of the following types:
 
      TYPE        | NORMAL BALANCE    | DESCRIPTION
      --------------------------------------------------------------------------
@@ -17,7 +20,7 @@ defmodule Fuentes.Account do
 
    At all times the balance of all accounts should conform to the "accounting equation"
 
-     Assets = Liabilities + Owner's Equity
+     **Assets = Liabilities + Owner's Equity**
 
    Each account type acts as it's own ledger.
 
