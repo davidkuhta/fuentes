@@ -116,22 +116,6 @@
             Summary
           </h1>
           
-  <div class="summary-types summary">
-    <h2>
-      <a href="#types">Types</a>
-    </h2>
-    <div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:fuentes_account/0">fuentes_account()</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Just a number followed by a string</p>
-</div>
-  
-</div>
-
-  </div>
-
 
           
   <div class="summary-functions summary">
@@ -140,20 +124,11 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#amount_sum/3">amount_sum(account, type, repo)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#amount_sum/4">amount_sum(account, type, dates, repo)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
     <a href="#balance/1">balance(repo)</a>
   </div>
+  
+    <div class="summary-synopsis"><p><a href="#balance/1"><code class="inline">balance/1</code></a> provides the trial balance for all accounts in a given Ecto.Repo</p>
+</div>
   
 </div>
 <div class="summary-row">
@@ -161,11 +136,20 @@
     <a href="#balance/2">balance(accounts, repo)</a>
   </div>
   
+    <div class="summary-synopsis"><p><a href="#balance/2"><code class="inline">balance/2</code></a> provides the account balance for a list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
+Ecto.Repo inclusive of all entries. This function is intended to be used with a
+list of <code class="inline">Fuentes.Accounts</code> of the same type</p>
+</div>
+  
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#balance/3">balance(account, dates, repo)</a>
   </div>
+  
+    <div class="summary-synopsis"><p><a href="#balance/3"><code class="inline">balance/3</code></a> provides the account balance for a given <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
+Ecto.Repo when provided with a map of dates in the format <code class="inline">%{from_date: from_date, to_date: to_date}</code></p>
+</div>
   
 </div>
 <div class="summary-row">
@@ -173,14 +157,8 @@
     <a href="#changeset/2">changeset(model, params \\ %{})</a>
   </div>
   
-    <div class="summary-synopsis"><p>Creates a changeset based on the <code class="inline">model</code> and <code class="inline">params</code></p>
+    <div class="summary-synopsis"><p>Creates a changeset requiring a <code class="inline">:name</code> and <code class="inline">:type</code></p>
 </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#with_amounts/1">with_amounts(query)</a>
-  </div>
   
 </div>
 
@@ -194,25 +172,6 @@
         </section>
       
 
-      
-        <section id="types" class="types details-list">
-          <h1 class="section-heading">
-            <a class="hover-link" href="#types">
-              <i class="icon-link"></i>
-            </a>
-            Types
-          </h1>
-          <div class="types-list">
-            <div id="t:fuentes_account/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:fuentes_account/0">fuentes_account</a> :: {number, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
-  
-    <div class="typespec-doc"><p>Just a number followed by a string.</p>
-</div>
-  
-</div>
-
-          </div>
-        </section>
       
 
       
@@ -223,55 +182,22 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="amount_sum/3">
-  <div class="detail-header">
-    <a href="#amount_sum/3" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">amount_sum(account, type, repo)</span>
-      
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L73" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="amount_sum/4">
-  <div class="detail-header">
-    <a href="#amount_sum/4" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">amount_sum(account, type, dates, repo)</span>
-      
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L83" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="balance/1">
+          <div class="detail" id="balance/1">
   <div class="detail-header">
     <a href="#balance/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
     <span class="signature">balance(repo)</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L126" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L132" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    
+    <p><a href="#balance/1"><code class="inline">balance/1</code></a> provides the trial balance for all accounts in a given Ecto.Repo.</p>
+
   </section>
 </div>
 <div class="detail" id="balance/2">
@@ -281,14 +207,17 @@
     </a>
     <span class="signature">balance(accounts, repo)</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L107" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L110" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    
+    <p><a href="#balance/2"><code class="inline">balance/2</code></a> provides the account balance for a list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
+Ecto.Repo inclusive of all entries. This function is intended to be used with a
+list of <code class="inline">Fuentes.Accounts</code> of the same type.</p>
+
   </section>
 </div>
 <div class="detail" id="balance/3">
@@ -298,14 +227,16 @@
     </a>
     <span class="signature">balance(account, dates, repo)</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L95" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L93" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    
+    <p><a href="#balance/3"><code class="inline">balance/3</code></a> provides the account balance for a given <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
+Ecto.Repo when provided with a map of dates in the format <code class="inline">%{from_date: from_date, to_date: to_date}</code>.</p>
+
   </section>
 </div>
 <div class="detail" id="changeset/2">
@@ -315,34 +246,15 @@
     </a>
     <span class="signature">changeset(model, params \\ %{})</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L62" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L54" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    <p>Creates a changeset based on the <code class="inline">model</code> and <code class="inline">params</code>.</p>
-<p>If no params are provided, an invalid changeset is returned
-with no validation performed.</p>
+    <p>Creates a changeset requiring a <code class="inline">:name</code> and <code class="inline">:type</code></p>
 
-  </section>
-</div>
-<div class="detail" id="with_amounts/1">
-  <div class="detail-header">
-    <a href="#with_amounts/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">with_amounts(query)</span>
-      
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L69" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-  <section class="docstring">
-    
   </section>
 </div>
 

@@ -86,7 +86,7 @@ defmodule Fuentes.Account do
   end
 
   @doc """
-  `balance/3 provides the account balance for a given `Fuentes.Account` in a given
+  `balance/3` provides the account balance for a given `Fuentes.Account` in a given
   Ecto.Repo when provided with a map of dates in the format `%{from_date: from_date, to_date: to_date}`.
   """
   # Balance for individual account with dates
@@ -102,7 +102,7 @@ defmodule Fuentes.Account do
   end
 
   @doc """
-  `balance/2 provides the account balance for a list of `Fuentes.Account` in a given
+  `balance/2` provides the account balance for a list of `Fuentes.Account` in a given
   Ecto.Repo inclusive of all entries. This function is intended to be used with a
   list of `Fuentes.Accounts` of the same type.
   """

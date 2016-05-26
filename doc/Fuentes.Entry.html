@@ -100,13 +100,19 @@ as consituting a traditional accounting Journal.</p>
     <a href="#balanced?/2">balanced?(entry, repo)</a>
   </div>
   
+    <div class="summary-synopsis"><p>Accepts an <a href="Fuentes.Entry.html#content"><code class="inline">Fuentes.Entry</code></a> and <code class="inline">Ecto.Repo</code> and returns true/false based on whether
+the associated amounts for that entry sum to zero</p>
+</div>
+  
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#changeset/2">changeset(model, params \\ %{})</a>
   </div>
   
-    <div class="summary-synopsis"><p>Creates a changeset based on the <code class="inline">model</code> and <code class="inline">params</code></p>
+    <div class="summary-synopsis"><p>Creates a changeset for <a href="Fuentes.Entry.html#content"><code class="inline">Fuentes.Entry</code></a>, validating a required <code class="inline">:description</code> and <code class="inline">:date</code>,
+casting an provided “debit” and “credit” <a href="Fuentes.Amount.html"><code class="inline">Fuentes.Amount</code></a>s, and validating that
+those amounts balance</p>
 </div>
   
 </div>
@@ -114,6 +120,10 @@ as consituting a traditional accounting Journal.</p>
   <div class="summary-signature">
     <a href="#validate_debits_and_credits_balance/1">validate_debits_and_credits_balance(changeset)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Accepts and returns a changeset, adding an error if “credit” and “debit” amounts
+are not equivalent</p>
+</div>
   
 </div>
 
@@ -144,14 +154,16 @@ as consituting a traditional accounting Journal.</p>
     </a>
     <span class="signature">balanced?(entry, repo)</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/entry.ex#L54" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/entry.ex#L63" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    
+    <p>Accepts an <a href="Fuentes.Entry.html#content"><code class="inline">Fuentes.Entry</code></a> and <code class="inline">Ecto.Repo</code> and returns true/false based on whether
+the associated amounts for that entry sum to zero.</p>
+
   </section>
 </div>
 <div class="detail" id="changeset/2">
@@ -161,16 +173,16 @@ as consituting a traditional accounting Journal.</p>
     </a>
     <span class="signature">changeset(model, params \\ %{})</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/entry.ex#L32" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/entry.ex#L31" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    <p>Creates a changeset based on the <code class="inline">model</code> and <code class="inline">params</code>.</p>
-<p>If no params are provided, an invalid changeset is returned
-with no validation performed.</p>
+    <p>Creates a changeset for <a href="Fuentes.Entry.html#content"><code class="inline">Fuentes.Entry</code></a>, validating a required <code class="inline">:description</code> and <code class="inline">:date</code>,
+casting an provided “debit” and “credit” <a href="Fuentes.Amount.html"><code class="inline">Fuentes.Amount</code></a>s, and validating that
+those amounts balance.</p>
 
   </section>
 </div>
@@ -181,14 +193,16 @@ with no validation performed.</p>
     </a>
     <span class="signature">validate_debits_and_credits_balance(changeset)</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/entry.ex#L40" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/entry.ex#L44" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    
+    <p>Accepts and returns a changeset, adding an error if “credit” and “debit” amounts
+are not equivalent</p>
+
   </section>
 </div>
 
