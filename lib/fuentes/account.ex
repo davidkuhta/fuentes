@@ -20,12 +20,14 @@ defmodule Fuentes.Account do
 
    At all times the balance of all accounts should conform to the "accounting equation"
 
-     **Assets = Liabilities + Owner's Equity**
+     *Assets = Liabilities + Owner's Equity*
 
    Each account type acts as it's own ledger.
 
   For more details see:
+
   [Wikipedia - Accounting Equation](http://en.wikipedia.org/wiki/Accounting_equation)
+
   [Wikipedia - Debits, Credits, and Contra Accounts](http://en.wikipedia.org/wiki/Debits_and_credits)
   """
 
@@ -90,8 +92,10 @@ defmodule Fuentes.Account do
   end
 
   @doc """
-  `balance/3` provides the account balance for a given `Fuentes.Account` in a given
-  Ecto.Repo when provided with a map of dates in the format `%{from_date: from_date, to_date: to_date}`.
+  Computes the account balance for a given `Fuentes.Account` in a given
+  Ecto.Repo when provided with a map of dates in the format
+  `%{from_date: from_date, to_date: to_date}`.
+  Returns Decimal type.
   """
   # Balance for individual account with dates
   def balance(account = %Account { type: type, contra: contra }, dates, repo) do
@@ -106,9 +110,10 @@ defmodule Fuentes.Account do
   end
 
   @doc """
-  `balance/2` provides the account balance for a list of `Fuentes.Account` in a given
+  Computes the account balance for a list of `Fuentes.Account` in a given
   Ecto.Repo inclusive of all entries. This function is intended to be used with a
   list of `Fuentes.Account`s of the same type.
+  Returns Decimal type.
   """
   # Balance for individual account
   def balance(account = %Account { type: type, contra: contra }, repo) do
@@ -130,7 +135,8 @@ defmodule Fuentes.Account do
   end
 
   @doc """
-  `balance/1` provides the trial balance for all accounts in a given Ecto.Repo.
+  Computes the trial balance for all accounts in the provided Ecto.Repo.
+  Returns Decimal type.
   """
   # Trial Balance for all accounts
   def balance(repo) do

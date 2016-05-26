@@ -74,7 +74,9 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>The Account class represents accounts in the system. Each account must be set to one of the following types:</p>
+          <p>The Account module represents accounts in the system which are of <em>asset</em>,
+<em>liability</em>, or <em>equity</em> types, in accordance with the “accounting equation”.</p>
+<p>Each account must be set to one of the following types:</p>
 <p>   TYPE        | NORMAL BALANCE    | DESCRIPTION</p>
 <hr class="thin"/>
 <table>
@@ -98,11 +100,11 @@
  as a contra equity account as follows:</p>
 <p>   <code class="inline">account = %Fuentes.Account{name: &quot;Drawing&quot;, type: &quot;asset&quot;, contra: true}</code></p>
 <p> At all times the balance of all accounts should conform to the “accounting equation”</p>
-<p>   Assets = Liabilities + Owner’s Equity</p>
+<p>   <em>Assets = Liabilities + Owner’s Equity</em></p>
 <p> Each account type acts as it’s own ledger.</p>
-<p>For more details see:
-<a href="http://en.wikipedia.org/wiki/Accounting_equation">Wikipedia - Accounting Equation</a>
-<a href="http://en.wikipedia.org/wiki/Debits_and_credits">Wikipedia - Debits, Credits, and Contra Accounts</a></p>
+<p>For more details see:</p>
+<p><a href="http://en.wikipedia.org/wiki/Accounting_equation">Wikipedia - Accounting Equation</a></p>
+<p><a href="http://en.wikipedia.org/wiki/Debits_and_credits">Wikipedia - Debits, Credits, and Contra Accounts</a></p>
 
         </section>
       
@@ -127,7 +129,8 @@
     <a href="#balance/1">balance(repo)</a>
   </div>
   
-    <div class="summary-synopsis"><p><a href="#balance/1"><code class="inline">balance/1</code></a> provides the trial balance for all accounts in a given Ecto.Repo</p>
+    <div class="summary-synopsis"><p>Computes the trial balance for all accounts in the provided Ecto.Repo.
+Returns Decimal type</p>
 </div>
   
 </div>
@@ -136,9 +139,10 @@
     <a href="#balance/2">balance(accounts, repo)</a>
   </div>
   
-    <div class="summary-synopsis"><p><a href="#balance/2"><code class="inline">balance/2</code></a> provides the account balance for a list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
+    <div class="summary-synopsis"><p>Computes the account balance for a list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
 Ecto.Repo inclusive of all entries. This function is intended to be used with a
-list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a>s of the same type</p>
+list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a>s of the same type.
+Returns Decimal type</p>
 </div>
   
 </div>
@@ -147,8 +151,10 @@ list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Acco
     <a href="#balance/3">balance(account, dates, repo)</a>
   </div>
   
-    <div class="summary-synopsis"><p><a href="#balance/3"><code class="inline">balance/3</code></a> provides the account balance for a given <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
-Ecto.Repo when provided with a map of dates in the format <code class="inline">%{from_date: from_date, to_date: to_date}</code></p>
+    <div class="summary-synopsis"><p>Computes the account balance for a given <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
+Ecto.Repo when provided with a map of dates in the format
+<code class="inline">%{from_date: from_date, to_date: to_date}</code>.
+Returns Decimal type</p>
 </div>
   
 </div>
@@ -189,14 +195,15 @@ Ecto.Repo when provided with a map of dates in the format <code class="inline">%
     </a>
     <span class="signature">balance(repo)</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L133" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L142" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    <p><a href="#balance/1"><code class="inline">balance/1</code></a> provides the trial balance for all accounts in a given Ecto.Repo.</p>
+    <p>Computes the trial balance for all accounts in the provided Ecto.Repo.
+Returns Decimal type.</p>
 
   </section>
 </div>
@@ -207,16 +214,17 @@ Ecto.Repo when provided with a map of dates in the format <code class="inline">%
     </a>
     <span class="signature">balance(accounts, repo)</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L111" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L119" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    <p><a href="#balance/2"><code class="inline">balance/2</code></a> provides the account balance for a list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
+    <p>Computes the account balance for a list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
 Ecto.Repo inclusive of all entries. This function is intended to be used with a
-list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a>s of the same type.</p>
+list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a>s of the same type.
+Returns Decimal type.</p>
 
   </section>
 </div>
@@ -227,15 +235,17 @@ list of <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Acco
     </a>
     <span class="signature">balance(account, dates, repo)</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L94" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L101" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    <p><a href="#balance/3"><code class="inline">balance/3</code></a> provides the account balance for a given <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
-Ecto.Repo when provided with a map of dates in the format <code class="inline">%{from_date: from_date, to_date: to_date}</code>.</p>
+    <p>Computes the account balance for a given <a href="Fuentes.Account.html#content"><code class="inline">Fuentes.Account</code></a> in a given
+Ecto.Repo when provided with a map of dates in the format
+<code class="inline">%{from_date: from_date, to_date: to_date}</code>.
+Returns Decimal type.</p>
 
   </section>
 </div>
@@ -246,7 +256,7 @@ Ecto.Repo when provided with a map of dates in the format <code class="inline">%
     </a>
     <span class="signature">changeset(model, params \\ %{})</span>
       
-      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L55" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/davidkuhta/fuentes/blob/v0.0.1/lib/fuentes/account.ex#L60" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
