@@ -13,9 +13,10 @@ defmodule Fuentes.Account do
    normal balance swapped. For example, to remove equity, a "Drawing" account may be created
    as a contra equity account as follows:
 
-     account = %Fuentes.Account{name: "Drawing", type: "asset", contra: true}
+     `account = %Fuentes.Account{name: "Drawing", type: "asset", contra: true}`
 
    At all times the balance of all accounts should conform to the "accounting equation"
+
      Assets = Liabilities + Owner's Equity
 
    Each account type acts as it's own ledger.
@@ -104,7 +105,7 @@ defmodule Fuentes.Account do
   @doc """
   `balance/2` provides the account balance for a list of `Fuentes.Account` in a given
   Ecto.Repo inclusive of all entries. This function is intended to be used with a
-  list of `Fuentes.Accounts` of the same type.
+  list of `Fuentes.Account`s of the same type.
   """
   # Balance for individual account
   def balance(account = %Account { type: type, contra: contra }, repo) do
