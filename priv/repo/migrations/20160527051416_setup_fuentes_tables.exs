@@ -1,4 +1,4 @@
-defmodule Fuentes.Repo.Migrations.SetupTables do
+defmodule Fuentes.Repo.Migrations.SetupFuentesTables do
   use Ecto.Migration
 
   def change do
