@@ -1,6 +1,5 @@
 defmodule Fuentes.Config do
-  @moduledoc false
-  @doc """
+  @moduledoc """
   Stores configuration variables used to communicate with Fuentes
 
   Returns the Fuentes Tenancy Setting. Set it in `mix.exs`:

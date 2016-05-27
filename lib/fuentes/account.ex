@@ -29,12 +29,8 @@ defmodule Fuentes.Account do
   [Wikipedia - Debits, Credits, and Contra Accounts](http://en.wikipedia.org/wiki/Debits_and_credits)
   """
 
-  @type t :: %__MODULE__{
-    name: String.t,
-    type: String.t,
-    contra: Boolean.t,
-    amounts: [Fuentes.Amount]
-  }
+  @typedoc "A Fuentes Account type."
+  @type t :: %__MODULE__{ name: String.t, type: String.t, contra: Boolean.t, amounts: [Fuentes.Amount] }
 
   alias Fuentes.{ Account, Amount, Config }
 

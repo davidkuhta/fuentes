@@ -1,12 +1,11 @@
 defmodule Mix.Tasks.Fuentes.Install do
-  @moduledoc false
-  use Mix.Task
-
-  @shortdoc "Generates a schema for double-entry accounting resources"
+  @shortdoc "Generates a migration for double-entry accounting resources"
 
   @moduledoc """
-    Generates a `setup_fuentes_tables` migration, which creates your accounts,
-    entries, and amounts tables, as well as required indexes.
+    After configuring your default ecto repo in `:ecto_repos`
+    Run mix Fuentes.install to generates a `setup_fuentes_tables` migration,
+    which creates your accounts, entries, and amounts tables, as well as
+    required indexes.
   """
 
   def run(_args) do
