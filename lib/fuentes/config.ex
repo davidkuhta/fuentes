@@ -7,7 +7,7 @@ defmodule Fuentes.Config do
 
       config :fuentes, tenancy: :true
   """
-  def repo_from_config, do: Application.get_env!(:fuentes, :repo)
+  def repo, do: List.first(Application.get_env!(:fuentes, :ecto_repos))
 
   #def tenancy, do: Application.get_env(:fuentes, :tenancy)
 end

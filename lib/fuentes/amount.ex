@@ -1,10 +1,16 @@
 # lib/fuentes/amount.ex
 defmodule Fuentes.Amount do
   @moduledoc """
-
   An amount must be of either the debit or credit type to be saved to the database.
-
   """
+
+  @type t :: %__MODULE__{
+    amount: Decimal.t,
+    type: String.t,
+    entry_id: Integer.t,
+    account_id: Integer.t
+  }
+
   alias Fuentes.{ Account, Amount }
 
   use Ecto.Schema

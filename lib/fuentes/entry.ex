@@ -5,6 +5,11 @@ defmodule Fuentes.Entry do
   as consituting a traditional accounting Journal.
   """
 
+  @type t :: %__MODULE__{
+    description: String.t,
+    date: Ecto.Date.t
+  }
+
   alias Fuentes.{ Amount, Entry }
 
   use Ecto.Schema
@@ -51,7 +56,8 @@ defmodule Fuentes.Entry do
     end
   end
 
-  def balanced?(repo, entry = %Entry{}) do
+  @spec balanced?(Ecto.Repo.t, Fuentes.Entry.t) :: Boolean.t
+  def balanced?(repo \\ Config.repo, entry = %Entry{}) do
     credits = Amount |> Amount.for_entry(entry) |> Amount.sum_type("credit") |> repo.all
     debits = Amount |> Amount.for_entry(entry) |> Amount.sum_type("debit") |> repo.all
 

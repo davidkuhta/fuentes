@@ -25,10 +25,12 @@ defmodule Fuentes.Account do
   [Wikipedia - Debits, Credits, and Contra Accounts](http://en.wikipedia.org/wiki/Debits_and_credits)
   """
 
-  @typedoc """
-  Just a number followed by a string.
-  """
-  @type fuentes_account :: {number, String.t}
+  @type t :: %__MODULE__{
+    name: String.t,
+    type: String.t,
+    contra: Boolean.t,
+    amounts: [Fuentes.Amount]
+  }
 
   alias Fuentes.{ Account, Amount, Config }
 
@@ -70,6 +72,7 @@ defmodule Fuentes.Account do
     from q in query, preload: [:amounts]
   end
 
+  @spec amount_sum(Ecto.Repo.t, Fuentes.Account.t, String.t) :: Decimal.t
   def amount_sum(repo, account, type) do
     [sum] = Amount |> Amount.for_account(account) |> Amount.sum_type(type) |> repo.all
 
@@ -80,6 +83,7 @@ defmodule Fuentes.Account do
     end
   end
 
+  @spec amount_sum(Ecto.Repo.t, Fuentes.Account.t, String.t, map) :: Decimal.t
   def amount_sum(repo, account, type, dates) do
     [sum] =
     Amount |> Amount.for_account(account) |> Amount.dated(dates) |> Amount.sum_type(type) |> repo.all
@@ -91,17 +95,18 @@ defmodule Fuentes.Account do
     end
   end
 
-  def balance(repo \\ Config.repo_from_config, accounts)
-
   # Balance for list of accounts, intended for use when of the same account type.
-  def balance(repo, accounts) when is_list(accounts) do
-    Enum.reduce(accounts, Decimal.new(0.0), fn(account, acc) ->
-       Decimal.add( Account.balance(repo, account), acc)
-    end)
-  end
+  # def balance(repo, accounts) when is_list(accounts) do
+  #   Enum.reduce(accounts, Decimal.new(0.0), fn(account, acc) ->
+  #      Decimal.add( Account.balance(repo, account), acc)
+  #   end)
+  # end
+
+  @spec balance(Ecto.Repo.t, [Fuentes.Account.t], Ecto.Date.t) :: Decimal.t
+  def balance(repo \\ Config.repo, account_or_account_list, dates \\ nil)
 
   # Balance for individual account
-  def balance(repo, account = %Account { type: type, contra: contra }) do
+  def balance(repo, account = %Account { type: type, contra: contra }, dates) when is_nil(dates) do
     credits = Account.amount_sum(repo, account, "credit")
     debits =  Account.amount_sum(repo, account, "debit")
 
@@ -124,7 +129,15 @@ defmodule Fuentes.Account do
     end
   end
 
+  # Balance for list of accounts, intended for use when of the same account type.
+  def balance(repo, accounts, dates) when is_list(accounts) do
+    Enum.reduce(accounts, Decimal.new(0.0), fn(account, acc) ->
+       Decimal.add( Account.balance(repo, account, dates), acc)
+    end)
+  end
+
   # Trial Balance for all accounts
+  @spec balance(Ecto.Repo.t) :: Decimal.t
   def trial_balance(repo \\ Config.repo_from_config) do
     accounts = repo.all(Account)
     accounts_by_type = Enum.group_by(accounts, fn(i) -> String.to_atom(i.type) end)
