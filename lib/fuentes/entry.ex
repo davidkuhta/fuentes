@@ -51,7 +51,7 @@ defmodule Fuentes.Entry do
     end
   end
 
-  def balanced?(entry = %Entry{}, repo) do
+  def balanced?(repo, entry = %Entry{}) do
     credits = Amount |> Amount.for_entry(entry) |> Amount.sum_type("credit") |> repo.all
     debits = Amount |> Amount.for_entry(entry) |> Amount.sum_type("debit") |> repo.all
 

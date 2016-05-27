@@ -30,7 +30,7 @@ defmodule Fuentes.Account do
   """
   @type fuentes_account :: {number, String.t}
 
-  alias Fuentes.{ Account, Amount }
+  alias Fuentes.{ Account, Amount, Config }
 
   use Ecto.Schema
   import Ecto.Changeset
@@ -49,8 +49,8 @@ defmodule Fuentes.Account do
 
   @fields ~w(name type contra)
 
-  @credit_types ["asset", "expense"]
-  @debit_types ["liability", "equity", "revenue"]
+  @credit_types ["asset"]
+  @debit_types ["liability", "equity"]
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -70,7 +70,7 @@ defmodule Fuentes.Account do
     from q in query, preload: [:amounts]
   end
 
-  def amount_sum(account, type, repo) do
+  def amount_sum(repo, account, type) do
     [sum] = Amount |> Amount.for_account(account) |> Amount.sum_type(type) |> repo.all
 
     if sum do
@@ -80,7 +80,7 @@ defmodule Fuentes.Account do
     end
   end
 
-  def amount_sum(account, type, dates, repo) do
+  def amount_sum(repo, account, type, dates) do
     [sum] =
     Amount |> Amount.for_account(account) |> Amount.dated(dates) |> Amount.sum_type(type) |> repo.all
 
@@ -91,44 +91,46 @@ defmodule Fuentes.Account do
     end
   end
 
-  # Balance for individual account with dates
-  def balance(account = %Account { type: type, contra: contra }, dates, repo) do
-    credits = Account.amount_sum(account, "credit", dates, repo)
-    debits =  Account.amount_sum(account, "debit", dates, repo)
-
-    if type in @credit_types && !(contra) do
-      balance = Decimal.sub(debits, credits)
-    else
-      balance = Decimal.sub(credits, debits)
-    end
-  end
-
-  # Balance for individual account
-  def balance(account = %Account { type: type, contra: contra }, repo) do
-    credits = Account.amount_sum(account, "credit", repo)
-    debits =  Account.amount_sum(account, "debit", repo)
-
-    if type in @credit_types && !(contra) do
-      balance = Decimal.sub(debits, credits)
-    else
-      balance = Decimal.sub(credits, debits)
-    end
-  end
+  def balance(repo \\ Config.repo_from_config, accounts)
 
   # Balance for list of accounts, intended for use when of the same account type.
-  def balance(accounts, repo) when is_list(accounts) do
+  def balance(repo, accounts) when is_list(accounts) do
     Enum.reduce(accounts, Decimal.new(0.0), fn(account, acc) ->
-       Decimal.add( Account.balance(account, repo), acc)
+       Decimal.add( Account.balance(repo, account), acc)
     end)
   end
 
+  # Balance for individual account
+  def balance(repo, account = %Account { type: type, contra: contra }) do
+    credits = Account.amount_sum(repo, account, "credit")
+    debits =  Account.amount_sum(repo, account, "debit")
+
+    if type in @credit_types && !(contra) do
+      balance = Decimal.sub(debits, credits)
+    else
+      balance = Decimal.sub(credits, debits)
+    end
+  end
+
+  # Balance for individual account with dates
+  def balance(repo, account = %Account { type: type, contra: contra }, dates) do
+    credits = Account.amount_sum(repo, account, "credit", dates)
+    debits =  Account.amount_sum(repo, account, "debit", dates)
+
+    if type in @credit_types && !(contra) do
+      balance = Decimal.sub(debits, credits)
+    else
+      balance = Decimal.sub(credits, debits)
+    end
+  end
+
   # Trial Balance for all accounts
-  def balance(repo) do
+  def trial_balance(repo \\ Config.repo_from_config) do
     accounts = repo.all(Account)
     accounts_by_type = Enum.group_by(accounts, fn(i) -> String.to_atom(i.type) end)
 
     accounts_by_type = Enum.map(accounts_by_type, fn { account_type, accounts } ->
-      { account_type, Account.balance(accounts, repo) }
+      { account_type, Account.balance(repo, accounts) }
     end)
 
     accounts_by_type[:asset]

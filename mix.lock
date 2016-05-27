@@ -1,7 +1,7 @@
 %{"connection": {:hex, :connection, "1.0.2", "f4a06dd3ecae4141aa66f94ce92ea4c4b8753069472814932f1cadbc3078ab80", [:mix], []},
   "db_connection": {:hex, :db_connection, "0.2.5", "3e5e28019e0ec744345568d22a2f5206109bff0e2571f4d7819e0d14cf955f3e", [:mix], [{:sbroker, "~> 0.7", [hex: :sbroker, optional: true]}, {:poolboy, "~> 1.5", [hex: :poolboy, optional: true]}, {:connection, "~> 1.0.2", [hex: :connection, optional: false]}]},
   "decimal": {:hex, :decimal, "1.1.2", "79a769d4657b2d537b51ef3c02d29ab7141d2b486b516c109642d453ee08e00c", [:mix], []},
-  "ecto": {:git, "https://github.com/elixir-lang/ecto", "eed7e927088ca5f024017ef2d7a5e48668cad216", [branch: "master"]},
-  "ex_machina": {:git, "https://github.com/thoughtbot/ex_machina", "689d29a7559c549eae2170c4676bada1c2fe0879", [branch: "master"]},
+  "ecto": {:git, "https://github.com/elixir-lang/ecto", "b3ade1b0d8e81d7ee10f578554304d80be575e09", [branch: "master"]},
+  "ex_machina": {:git, "https://github.com/thoughtbot/ex_machina", "a24c02618b460094bb81ea90f41e052355383e5a", [branch: "master"]},
   "poolboy": {:hex, :poolboy, "1.5.1", "6b46163901cfd0a1b43d692657ed9d7e599853b3b21b95ae5ae0a777cf9b6ca8", [:rebar], []},
   "postgrex": {:hex, :postgrex, "0.11.1", "f48af70c0a58b9bfd1aaa456ec4273624554cfb837726b6a7f0701da4a94b2dd", [:mix], [{:decimal, "~> 1.0", [hex: :decimal, optional: false]}, {:db_connection, "~> 0.2", [hex: :db_connection, optional: false]}, {:connection, "~> 1.0", [hex: :connection, optional: false]}]}}
