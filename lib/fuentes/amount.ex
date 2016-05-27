@@ -1,4 +1,3 @@
-# lib/fuentes/amount.ex
 defmodule Fuentes.Amount do
   @moduledoc """
   An Amount represents the individual debit or credit for a given account and is

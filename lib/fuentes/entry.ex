@@ -1,4 +1,3 @@
-# lib/fuentes/account.ex
 defmodule Fuentes.Entry do
   @moduledoc """
   Entries are the recording of account debits and credits and can be considered

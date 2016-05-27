@@ -1,4 +1,3 @@
-# lib/fuentes/account.ex
 defmodule Fuentes.Account do
   @moduledoc """
   The Account module represents accounts in the system which are of _asset_,
