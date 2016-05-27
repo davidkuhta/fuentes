@@ -150,7 +150,7 @@ defmodule Fuentes.Account do
   Returns Decimal type.
   """
   # Trial Balance for all accounts
-  @spec balance(Ecto.Repo.t) :: Decimal.t
+  @spec trial_balance(Ecto.Repo.t) :: Decimal.t
   def trial_balance(repo \\ Config.repo_from_config) do
     accounts = repo.all(Account)
     accounts_by_type = Enum.group_by(accounts, fn(i) -> String.to_atom(i.type) end)

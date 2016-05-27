@@ -4,14 +4,6 @@ defmodule Fuentes.Amount do
   An Amount represents the individual debit or credit for a given account and is
   part of a balanced entry.
   """
-
-  @type t :: %__MODULE__{
-    amount: Decimal.t,
-    type: String.t,
-    entry_id: Integer.t,
-    account_id: Integer.t
-  }
-
   alias Fuentes.{ Account, Amount }
 
   use Ecto.Schema

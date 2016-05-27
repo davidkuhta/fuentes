@@ -42,7 +42,7 @@ defmodule Fuentes.Entry do
   end
 
   @doc """
-  Accepts and returns a changeset, adding an error if "credit" and "debit" amounts
+  Accepts and returns a changeset, appending an error if "credit" and "debit" amounts
   are not equivalent
   """
 
