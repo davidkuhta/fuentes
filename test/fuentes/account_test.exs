@@ -22,8 +22,8 @@ defmodule Fuentes.AccountTest do
   test "trial balance zero with and without entries" do
     asset = insert(:account)
     insert(:account, name: "Liabilities", type: "liability")
-    insert(:account, name: "Revenue", type: "revenue")
-    insert(:account, name: "Expense", type: "expense")
+    insert(:account, name: "Revenue", type: "asset")
+    insert(:account, name: "Expense", type: "asset")
     equity = insert(:account, name: "Equity", type: "equity")
     drawing = insert(:account, name: "Drawing", type: "equity", contra: true)
 
@@ -48,8 +48,8 @@ defmodule Fuentes.AccountTest do
   test "account balances with entries and dates" do
     insert(:account)
     insert(:account, name: "Liabilities", type: "liability")
-    insert(:account, name: "Revenue", type: "revenue")
-    insert(:account, name: "Expense", type: "expense")
+    insert(:account, name: "Revenue", type: "asset")
+    insert(:account, name: "Expense", type: "asset")
     equity = insert(:account, name: "Equity", type: "equity")
     drawing = insert(:account, name: "Drawing", type: "equity", contra: true)
 

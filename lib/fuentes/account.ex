@@ -1,7 +1,10 @@
 # lib/fuentes/account.ex
 defmodule Fuentes.Account do
   @moduledoc """
-  The Account class represents accounts in the system. Each account must be set to one of the following types:
+  The Account module represents accounts in the system which are of _asset_,
+  _liability_, or _equity_ types, in accordance with the "accounting equation".
+
+  Each account must be set to one of the following types:
 
      TYPE        | NORMAL BALANCE    | DESCRIPTION
      --------------------------------------------------------------------------
@@ -13,14 +16,16 @@ defmodule Fuentes.Account do
    normal balance swapped. For example, to remove equity, a "Drawing" account may be created
    as a contra equity account as follows:
 
-     account = %Fuentes.Account{name: "Drawing", type: "asset", contra: true}
+     `account = %Fuentes.Account{name: "Drawing", type: "asset", contra: true}`
 
    At all times the balance of all accounts should conform to the "accounting equation"
-     Assets = Liabilities + Owner's Equity
+
+     *Assets = Liabilities + Owner's Equity*
 
    Each account type acts as it's own ledger.
 
   For more details see:
+
   [Wikipedia - Accounting Equation](http://en.wikipedia.org/wiki/Accounting_equation)
   [Wikipedia - Debits, Credits, and Contra Accounts](http://en.wikipedia.org/wiki/Debits_and_credits)
   """
@@ -55,12 +60,8 @@ defmodule Fuentes.Account do
   @debit_types ["liability", "equity"]
 
   @doc """
-  Creates a changeset based on the `model` and `params`.
-
-  If no params are provided, an invalid changeset is returned
-  with no validation performed.
+  Creates a changeset requiring a `:name` and `:type`
   """
-
   def changeset(model, params \\ %{}) do
     model
     |> cast(params, @fields)
@@ -68,10 +69,11 @@ defmodule Fuentes.Account do
     |> validate_inclusion(:type, @credit_types ++ @debit_types)
   end
 
-  def with_amounts(query) do
+  defp with_amounts(query) do
     from q in query, preload: [:amounts]
   end
 
+  @doc false
   @spec amount_sum(Ecto.Repo.t, Fuentes.Account.t, String.t) :: Decimal.t
   def amount_sum(repo, account, type) do
     [sum] = Amount |> Amount.for_account(account) |> Amount.sum_type(type) |> repo.all
@@ -83,6 +85,7 @@ defmodule Fuentes.Account do
     end
   end
 
+  @doc false
   @spec amount_sum(Ecto.Repo.t, Fuentes.Account.t, String.t, map) :: Decimal.t
   def amount_sum(repo, account, type, dates) do
     [sum] =
@@ -95,12 +98,12 @@ defmodule Fuentes.Account do
     end
   end
 
-  # Balance for list of accounts, intended for use when of the same account type.
-  # def balance(repo, accounts) when is_list(accounts) do
-  #   Enum.reduce(accounts, Decimal.new(0.0), fn(account, acc) ->
-  #      Decimal.add( Account.balance(repo, account), acc)
-  #   end)
-  # end
+  @doc """
+  Computes the account balance for a given `Fuentes.Account` in a given
+  Ecto.Repo when provided with a map of dates in the format
+  `%{from_date: from_date, to_date: to_date}`.
+  Returns Decimal type.
+  """
 
   @spec balance(Ecto.Repo.t, [Fuentes.Account.t], Ecto.Date.t) :: Decimal.t
   def balance(repo \\ Config.repo, account_or_account_list, dates \\ nil)
@@ -117,6 +120,12 @@ defmodule Fuentes.Account do
     end
   end
 
+  @doc """
+  Computes the account balance for a list of `Fuentes.Account` in a given
+  Ecto.Repo inclusive of all entries. This function is intended to be used with a
+  list of `Fuentes.Account`s of the same type.
+  Returns Decimal type.
+  """
   # Balance for individual account with dates
   def balance(repo, account = %Account { type: type, contra: contra }, dates) do
     credits = Account.amount_sum(repo, account, "credit", dates)
@@ -136,6 +145,10 @@ defmodule Fuentes.Account do
     end)
   end
 
+  @doc """
+  Computes the trial balance for all accounts in the provided Ecto.Repo.
+  Returns Decimal type.
+  """
   # Trial Balance for all accounts
   @spec balance(Ecto.Repo.t) :: Decimal.t
   def trial_balance(repo \\ Config.repo_from_config) do
@@ -149,7 +162,5 @@ defmodule Fuentes.Account do
     accounts_by_type[:asset]
     |> Decimal.sub(accounts_by_type[:liability])
     |> Decimal.sub(accounts_by_type[:equity])
-    |> Decimal.sub(accounts_by_type[:revenue])
-    |> Decimal.add(accounts_by_type[:expense])
   end
 end

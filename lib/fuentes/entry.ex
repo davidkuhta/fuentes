@@ -28,10 +28,9 @@ defmodule Fuentes.Entry do
   @fields ~w(description date)
 
   @doc """
-  Creates a changeset based on the `model` and `params`.
-
-  If no params are provided, an invalid changeset is returned
-  with no validation performed.
+  Creates a changeset for `Fuentes.Entry`, validating a required `:description` and `:date`,
+  casting an provided "debit" and "credit" `Fuentes.Amount`s, and validating that
+  those amounts balance.
   """
 
   def changeset(model, params \\ %{}) do
@@ -41,6 +40,11 @@ defmodule Fuentes.Entry do
     |> cast_assoc(:amounts)
     |> validate_debits_and_credits_balance
   end
+
+  @doc """
+  Accepts and returns a changeset, adding an error if "credit" and "debit" amounts
+  are not equivalent
+  """
 
   def validate_debits_and_credits_balance(changeset) do
     amounts = Ecto.Changeset.get_field(changeset, :amounts)
@@ -56,6 +60,10 @@ defmodule Fuentes.Entry do
     end
   end
 
+  @doc """
+  Accepts an `Fuentes.Entry` and `Ecto.Repo` and returns true/false based on whether
+  the associated amounts for that entry sum to zero.
+  """
   @spec balanced?(Ecto.Repo.t, Fuentes.Entry.t) :: Boolean.t
   def balanced?(repo \\ Config.repo, entry = %Entry{}) do
     credits = Amount |> Amount.for_entry(entry) |> Amount.sum_type("credit") |> repo.all
