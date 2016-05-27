@@ -2,7 +2,7 @@ defmodule Mix.Tasks.Fuentes.Install do
   @moduledoc false
   use Mix.Task
 
-  @shortdoc "Generates schema for double-entry accounting resources"
+  @shortdoc "Generates a schema for double-entry accounting resources"
 
   @moduledoc """
     Generates a `setup_fuentes_tables` migration, which creates your accounts,
@@ -11,9 +11,13 @@ defmodule Mix.Tasks.Fuentes.Install do
 
   def run(_args) do
     source = Path.join(Application.app_dir(:fuentes, "/priv/templates/fuentes.install/"), "setup_fuentes_tables.exs")
-    target = Path.join(Application.app_dir(:fuentes, "/priv/repo/migrations/"), "#{timestamp}_setup_fuentes_tables.exs")
-    #IO.inspect File.cp_r(source, target)
-    IO.inspect Mix.Generator.create_file(target, EEx.eval_file(source))
+    target = Path.join(File.cwd!, "/priv/repo/migrations/#{timestamp}_setup_fuentes_tables.exs")
+
+    if !File.dir?(target) do
+      File.mkdir_p("priv/repo/migrations/")
+    end
+
+    Mix.Generator.create_file(target, EEx.eval_file(source))
   end
 
   defp timestamp do
