@@ -6,8 +6,6 @@ _Work In Progress_ - use at your own risk.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
   1. Add fuentes to your list of dependencies in `mix.exs`:
 
         def deps do
@@ -30,11 +28,11 @@ Fuentes consists of tables that maintain your accounts, entries and debits and c
 
 The Account class represents accounts in the system. Each account must be set to one of the following types:
 
-   TYPE        | NORMAL BALANCE    | DESCRIPTION
-   --------------------------------------------------------------------------
-   asset       | Debit             | Resources owned by the Business Entity
-   liability   | Credit            | Debts owed to outsiders
-   equity      | Credit            | Owners rights to the Assets
+   | TYPE      | NORMAL BALANCE | DESCRIPTION                            |
+   | :-------- | :-------------:| :--------------------------------------|
+   | asset     | Debit          | Resources owned by the Business Entity |
+   | liability | Credit         | Debts owed to outsiders                |
+   | equity    | Credit         | Owners rights to the Assets            |
 
    Your Book of Accounts needs to be created prior to recording any entries. The simplest method is to have a number of insert methods in your priv/repo/migrations/seeds.exs file like so:
    ```

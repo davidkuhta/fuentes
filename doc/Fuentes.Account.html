@@ -77,25 +77,28 @@
           <p>The Account module represents accounts in the system which are of <em>asset</em>,
 <em>liability</em>, or <em>equity</em> types, in accordance with the “accounting equation”.</p>
 <p>Each account must be set to one of the following types:</p>
-<p>   TYPE        | NORMAL BALANCE    | DESCRIPTION</p>
-<hr class="thin"/>
 <table>
 <colgroup>
 <col>
 <col>
 <col>
 </colgroup>
+<thead>
 <tr>
-<td style="text-align: left">asset</td><td style="text-align: left">Debit</td><td style="text-align: left">Resources owned by the Business Entity</td>
+<th style="text-align: left">TYPE</th><th style="text-align: center">NORMAL BALANCE</th><th style="text-align: left">DESCRIPTION</th>
+</tr>
+</thead>
+<tr>
+<td style="text-align: left">asset</td><td style="text-align: center">Debit</td><td style="text-align: left">Resources owned by the Business Entity</td>
 </tr>
 <tr>
-<td style="text-align: left">liability</td><td style="text-align: left">Credit</td><td style="text-align: left">Debts owed to outsiders</td>
+<td style="text-align: left">liability</td><td style="text-align: center">Credit</td><td style="text-align: left">Debts owed to outsiders</td>
 </tr>
 <tr>
-<td style="text-align: left">equity</td><td style="text-align: left">Credit</td><td style="text-align: left">Owners rights to the Assets</td>
+<td style="text-align: left">equity</td><td style="text-align: center">Credit</td><td style="text-align: left">Owners rights to the Assets</td>
 </tr>
 </table>
-<p> Each account can also be marked as a “Contra Account”. A contra account will have it’s
+<p> Each account can also be marked as a <em>Contra Account</em>. A contra account will have it’s
  normal balance swapped. For example, to remove equity, a “Drawing” account may be created
  as a contra equity account as follows:</p>
 <p>   <code class="inline">account = %Fuentes.Account{name: &quot;Drawing&quot;, type: &quot;asset&quot;, contra: true}</code></p>
@@ -265,6 +268,15 @@ Returns Decimal type.</p>
      </a>
     
   </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">trial_balance(Ecto.Repo.t) :: Decimal.t</code></pre>
+        
+      </div>
+    </div>
   
   <section class="docstring">
     <p>Computes the trial balance for all accounts in the provided Ecto.Repo.

@@ -6,13 +6,13 @@ defmodule Fuentes.Account do
 
   Each account must be set to one of the following types:
 
-     TYPE        | NORMAL BALANCE    | DESCRIPTION
-     --------------------------------------------------------------------------
-     asset       | Debit             | Resources owned by the Business Entity
-     liability   | Credit            | Debts owed to outsiders
-     equity      | Credit            | Owners rights to the Assets
+     | TYPE      | NORMAL BALANCE | DESCRIPTION                            |
+     | :-------- | :-------------:| :--------------------------------------|
+     | asset     | Debit          | Resources owned by the Business Entity |
+     | liability | Credit         | Debts owed to outsiders                |
+     | equity    | Credit         | Owners rights to the Assets            |
 
-   Each account can also be marked as a "Contra Account". A contra account will have it's
+   Each account can also be marked as a _Contra Account_. A contra account will have it's
    normal balance swapped. For example, to remove equity, a "Drawing" account may be created
    as a contra equity account as follows:
 
